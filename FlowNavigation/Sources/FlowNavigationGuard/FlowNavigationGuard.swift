@@ -1,0 +1,30 @@
+//
+//  FlowNavigationGuard.swift
+//  FlowNavigation
+//
+//  Created by feng qiu on 2026/3/3.
+//
+
+import Foundation
+import FlowNavigationCore
+
+public protocol RouteGuard {
+    func canNavigate(to route: RouteID) async -> Bool
+}
+
+public final class AuthGuard: RouteGuard {
+
+    private let isLoggedIn: @Sendable () async -> Bool
+    private let loginRoute: RouteID
+
+    public init(isLoggedIn: @escaping @Sendable () async -> Bool, loginRoute: RouteID) {
+        self.isLoggedIn = isLoggedIn
+        self.loginRoute = loginRoute
+    }
+
+    public func canNavigate(to route: RouteID) async -> Bool {
+        await isLoggedIn()
+    }
+
+    public func loginRouteID() -> RouteID { loginRoute }
+}
