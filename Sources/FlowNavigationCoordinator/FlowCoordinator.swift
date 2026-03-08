@@ -14,7 +14,7 @@ import Combine
 @MainActor
 public final class FlowCoordinator: ObservableObject {
 
-    private let registry: RouteRegistry
+    let registry: RouteRegistry
     private let guards: [RouteGuard]
 
     @Published public var state: TabNavigationState
@@ -41,7 +41,10 @@ public final class FlowCoordinator: ObservableObject {
     }
 
     // MARK: - Tab navigation
-    public func selectTab(_ tab: String) { state.selectedTab = tab }
+    public func selectTab(_ tab: String) {
+        state.selectedTab = tab
+    }
+    
     public func push(_ id: RouteID) {
         Task {
             guard await canNavigate(to: id) else { return }
