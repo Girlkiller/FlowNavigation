@@ -7,6 +7,7 @@
 
 import FlowNavigationCore
 import Foundation
+import FlowNavigationTypes
 
 public final class FlowPersistence {
 

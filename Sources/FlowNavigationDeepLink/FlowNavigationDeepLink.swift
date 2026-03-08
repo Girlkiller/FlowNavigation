@@ -7,6 +7,7 @@
 
 import FlowNavigationCore
 import Foundation
+import FlowNavigationTypes
 
 /// 路由参数封装
 public struct RouteParameters {

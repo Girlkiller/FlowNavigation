@@ -7,6 +7,7 @@ let package = Package(
         .iOS(.v16)
     ],
     products: [
+        .library(name: "FlowNavigationTypes", targets: ["FlowNavigationTypes"]),
         .library(name: "FlowNavigationCore", targets: ["FlowNavigationCore"]),
         .library(name: "FlowNavigationUI", targets: ["FlowNavigationUI"]),
         .library(name: "FlowNavigationUIKit", targets: ["FlowNavigationUIKit"]),
@@ -19,70 +20,77 @@ let package = Package(
     targets: [
 
         .target(
+            name: "FlowNavigationTypes",
+            path: "Sources/FlowNavigationTypes",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
+
+        .target(
             name: "FlowNavigationCore",
+            dependencies: ["FlowNavigationTypes"],
             path: "Sources/FlowNavigationCore",
             swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
         ),
 
-            .target(
-                name: "FlowNavigationUI",
-                dependencies: ["FlowNavigationCore","FlowNavigationGuard"],
-                path: "Sources/FlowNavigationUI",
-                swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
-            ),
+        .target(
+            name: "FlowNavigationUI",
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore", "FlowNavigationGuard"],
+            path: "Sources/FlowNavigationUI",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
 
-            .target(
-                name: "FlowNavigationUIKit",
-                dependencies: ["FlowNavigationCore", "FlowNavigationCoordinator"],
-                path: "Sources/FlowNavigationUIKit",
-                swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
-            ),
+        .target(
+            name: "FlowNavigationUIKit",
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore", "FlowNavigationCoordinator"],
+            path: "Sources/FlowNavigationUIKit",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
 
-            .target(
-                name: "FlowNavigationPersistence",
-                dependencies: ["FlowNavigationCore"],
-                path: "Sources/FlowNavigationPersistence",
-                swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
-            ),
+        .target(
+            name: "FlowNavigationPersistence",
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore"],
+            path: "Sources/FlowNavigationPersistence",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
 
-            .target(
-                name: "FlowNavigationDeepLink",
-                dependencies: ["FlowNavigationCore"],
-                path: "Sources/FlowNavigationDeepLink",
-                swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
-            ),
+        .target(
+            name: "FlowNavigationDeepLink",
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore"],
+            path: "Sources/FlowNavigationDeepLink",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
 
-            .target(
-                name: "FlowNavigationGuard",
-                dependencies: ["FlowNavigationCore"],
-                path: "Sources/FlowNavigationGuard",
-                swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
-            ),
+        .target(
+            name: "FlowNavigationGuard",
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore"],
+            path: "Sources/FlowNavigationGuard",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
 
-            .target(
-                name: "FlowNavigationCoordinator",
-                dependencies: ["FlowNavigationCore", "FlowNavigationGuard"],
-                path: "Sources/FlowNavigationCoordinator",
-                swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
-            ),
+        .target(
+            name: "FlowNavigationCoordinator",
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore", "FlowNavigationGuard"],
+            path: "Sources/FlowNavigationCoordinator",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
 
-            .target(
-                name: "FlowNavigationEnvironment",
-                dependencies: ["FlowNavigationCore", "FlowNavigationCoordinator"],
-                path: "Sources/FlowNavigationEnvironment",
-                swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
-            ),
+        .target(
+            name: "FlowNavigationEnvironment",
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore", "FlowNavigationCoordinator"],
+            path: "Sources/FlowNavigationEnvironment",
+            swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
+        ),
 
-            .testTarget(
-                name: "FlowNavigationTests",
-                dependencies: ["FlowNavigationCore"],
-                path: "Tests/FlowNavigationTests"
-            ),
+        .testTarget(
+            name: "FlowNavigationTests",
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore"],
+            path: "Tests/FlowNavigationTests"
+        ),
 
-            .testTarget(
-                name: "FlowNavigationUITests",
-                dependencies: ["FlowNavigationUI"],
-                path: "Tests/FlowNavigationUITests"
-            ),
+        .testTarget(
+            name: "FlowNavigationUITests",
+            dependencies: ["FlowNavigationUI"],
+            path: "Tests/FlowNavigationUITests"
+        ),
     ]
 )

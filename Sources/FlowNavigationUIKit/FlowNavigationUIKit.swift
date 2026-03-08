@@ -8,6 +8,7 @@
 import UIKit
 import FlowNavigationCore
 import FlowNavigationCoordinator
+import FlowNavigationTypes
 
 public final class FlowUIKitBridge {
 

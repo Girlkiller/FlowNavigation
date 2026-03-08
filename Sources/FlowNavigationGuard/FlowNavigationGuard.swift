@@ -7,10 +7,7 @@
 
 import Foundation
 import FlowNavigationCore
-
-public protocol RouteGuard {
-    func canNavigate(to route: RouteID) async -> Bool
-}
+import FlowNavigationTypes
 
 public final class AuthGuard: RouteGuard {
 
@@ -26,5 +23,7 @@ public final class AuthGuard: RouteGuard {
         await isLoggedIn()
     }
 
-    public func loginRouteID() -> RouteID { loginRoute }
+    public func loginRouteID() -> RouteID {
+        loginRoute
+    }
 }

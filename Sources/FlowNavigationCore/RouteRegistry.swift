@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import FlowNavigationTypes
 
 @preconcurrency
 public protocol RouteModule {
@@ -46,7 +47,7 @@ public final class RouteRegistry: ObservableObject {
         }
     }
 
-    public func descriptor(for id: RouteID) async -> RouteDescriptor? {
+    public func descriptor(for id: RouteID) -> RouteDescriptor? {
         return descriptors[id]
     }
 }

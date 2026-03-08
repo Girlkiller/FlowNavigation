@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import FlowNavigationTypes
 import FlowNavigationCoordinator
 import FlowNavigationCore
+import FlowNavigationGuard
 
 @MainActor
 public final class NavigationEnvironment {
@@ -19,8 +21,8 @@ public final class NavigationEnvironment {
     private init() {}
 
     // Host App 在初始化时调用
-    public func setupCoordinator(initialState: TabNavigationState) {
+    public func setupCoordinator(initialState: TabNavigationState, guards: [RouteGuard] = []) {
         guard coordinator == nil else { return }
-        self.coordinator = FlowCoordinator(registry: registry, initialState: initialState)
+        self.coordinator = FlowCoordinator(registry: registry, initialState: initialState, guards: guards)
     }
 }

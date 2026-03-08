@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FlowNavigationTypes
 import FlowNavigationCore
 import FlowNavigationGuard
 import Combine
@@ -24,29 +25,46 @@ public final class FlowCoordinator: ObservableObject {
         self.guards = guards
     }
 
+    // MARK: - 检查 Guard
+    private func canNavigate(to id: RouteID) async -> Bool {
+        guard let descriptor = registry.descriptor(for: id) else { return true }
+        let guards = descriptor.guards + guards
+        for g in guards {
+            if !(await g.canNavigate(to: id)) {
+                if let auth = g as? AuthGuard {
+                    present(auth.loginRouteID())
+                }
+                return false
+            }
+        }
+        return true
+    }
+
     // MARK: - Tab navigation
     public func selectTab(_ tab: String) { state.selectedTab = tab }
     public func push(_ id: RouteID) {
         Task {
-            for g in guards {
-                if !(await g.canNavigate(to: id)) {
-                    if let auth = g as? AuthGuard {
-                        self.present(auth.loginRouteID())
-                    }
-                    return
-                }
-            }
+            guard await canNavigate(to: id) else { return }
             state.stacks[state.selectedTab]?.append(id)
         }
     }
 
-    public func pop() { state.stacks[state.selectedTab]?.popLast() }
-    public func popToRoot() { state.stacks[state.selectedTab]?.removeAll() }
+    @discardableResult
+    public func pop() -> RouteID? {
+        state.stacks[state.selectedTab]?.popLast()
+    }
+    
+    public func popToRoot() {
+        state.stacks[state.selectedTab]?.removeAll()
+    }
 
     // MARK: - Present / FullScreen with stack
     public func present(_ id: RouteID, initialStack: [RouteID]? = nil) {
-        state.presentedStacks[id] = initialStack ?? [id]
-        state.sheets[state.selectedTab] = id
+        Task {
+            guard await canNavigate(to: id) else { return }
+            state.presentedStacks[id] = initialStack ?? [id]
+            state.sheets[state.selectedTab] = id
+        }
     }
 
     public func dismiss(_ id: RouteID) {
@@ -59,7 +77,8 @@ public final class FlowCoordinator: ObservableObject {
         state.presentedStacks[presentID]?.append(route)
     }
 
-    public func popInPresent(_ presentID: RouteID) {
+    @discardableResult
+    public func popInPresent(_ presentID: RouteID) -> RouteID? {
         state.presentedStacks[presentID]?.popLast()
     }
 
