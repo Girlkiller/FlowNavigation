@@ -40,38 +40,74 @@ public struct FlowNavigationContainer<Root: View>: View {
 
             centerButton
         }
+        .ignoresSafeArea(.keyboard)
     }
 
     private var visibleTabs: [TabDescriptor] {
-        coordinator.state.tabs.filter { $0.style != .hidden && $0.style != .centerButton }
+
+        coordinator.state.tabs.filter {
+            $0.style != .hidden
+        }
     }
 
     private var centerTab: TabDescriptor? {
-        coordinator.state.tabs.first { $0.style == .centerButton }
+
+        coordinator.state.tabs.first {
+            $0.style == .centerButton
+        }
     }
 
     @ViewBuilder
     private func tabView(for tab: TabDescriptor) -> some View {
 
-        NavigationStack(path: stackBinding(for: tab.id)) {
+        if tab.style == .centerButton {
 
-            root(tab.id)
-                .navigationDestination(for: RouteID.self) { id in
-                    registry.view(for: id)
-                }
+            Color.clear
+                .tabItem { EmptyView() }
+                .tag(tab.id)
+
+        } else {
+
+            NavigationStack(path: stackBinding(for: tab.id)) {
+
+                root(tab.id)
+                    .navigationDestination(for: RouteID.self) { id in
+                        registry.view(for: id)
+                    }
+            }
+            .tabItem {
+
+                tabItem(tab)
+            }
+            .tag(tab.id)
+            .sheet(item: sheetBinding(for: tab.id)) { sheetID in
+                sheetView(for: sheetID)
+            }
         }
-        .tabItem {
+    }
+
+    private func tabItem(_ tab: TabDescriptor) -> some View {
+
+        ZStack(alignment: .topTrailing) {
 
             VStack {
 
                 iconView(tab.icon)
 
                 Text(tab.title)
+                    .font(.caption)
             }
-        }
-        .tag(tab.id)
-        .sheet(item: sheetBinding(for: tab.id)) { sheetID in
-            sheetView(for: sheetID)
+
+            if let badge = tab.badge, badge > 0 {
+
+                Text("\(badge)")
+                    .font(.system(size: 10))
+                    .padding(4)
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                    .offset(x: 10, y: -5)
+            }
         }
     }
 
@@ -82,7 +118,14 @@ public struct FlowNavigationContainer<Root: View>: View {
 
             Button {
 
-                coordinator.state.selectedTab = tab.id
+                if let action = tab.action {
+
+                    action()
+
+                } else {
+
+                    coordinator.state.selectedTab = tab.id
+                }
 
             } label: {
 
@@ -91,9 +134,10 @@ public struct FlowNavigationContainer<Root: View>: View {
                     .background(Color.blue)
                     .foregroundColor(.white)
                     .clipShape(Circle())
-                    .shadow(radius: 4)
+                    .shadow(radius: 5)
             }
-            .offset(y: -20)
+            .offset(y: -30)
+            .animation(.spring(), value: coordinator.state.selectedTab)
         }
     }
 
@@ -103,31 +147,50 @@ public struct FlowNavigationContainer<Root: View>: View {
         switch icon {
 
         case .system(let name):
+
             Image(systemName: name)
 
         case .asset(let name):
+
             Image(name)
 
         case .remote(let url):
+
             AsyncImage(url: url) { image in
-                image.resizable().scaledToFit()
+
+                image
+                    .resizable()
+                    .scaledToFit()
+
             } placeholder: {
+
                 ProgressView()
             }
         }
     }
 
     private func stackBinding(for tab: String) -> Binding<[RouteID]> {
+
         Binding(
-            get: { coordinator.state.stacks[tab] ?? [] },
-            set: { coordinator.state.stacks[tab] = $0 }
+            get: {
+                coordinator.state.stacks[tab] ?? []
+            },
+            set: {
+                coordinator.state.stacks[tab] = $0
+            }
         )
     }
 
     private func sheetBinding(for tab: String) -> Binding<RouteID?> {
         Binding(
             get: { coordinator.state.sheets[tab] ?? nil },
-            set: { coordinator.state.sheets[tab] = $0 }
+            set: { newValue in
+                if let value = newValue {
+                    coordinator.state.sheets[tab] = value
+                } else {
+                    coordinator.state.sheets.removeValue(forKey: tab)
+                }
+            }
         )
     }
 
@@ -137,8 +200,11 @@ public struct FlowNavigationContainer<Root: View>: View {
         NavigationStack(path: sheetStackBinding(for: sheetID)) {
 
             if let rootID = coordinator.currentStack(for: sheetID).first {
+
                 registry.view(for: rootID)
+
             } else {
+
                 Text("Empty Stack")
             }
         }
@@ -147,8 +213,12 @@ public struct FlowNavigationContainer<Root: View>: View {
     private func sheetStackBinding(for sheetID: RouteID) -> Binding<[RouteID]> {
 
         Binding(
-            get: { coordinator.currentStack(for: sheetID) },
-            set: { coordinator.state.presentedStacks[sheetID] = $0 }
+            get: {
+                coordinator.currentStack(for: sheetID)
+            },
+            set: {
+                coordinator.state.presentedStacks[sheetID] = $0
+            }
         )
     }
 }

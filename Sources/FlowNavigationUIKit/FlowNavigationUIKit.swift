@@ -18,7 +18,7 @@ public final class FlowUIKitBridge {
 
     public func viewController(for id: RouteID) async -> UIViewController? {
         guard let descriptor = await registry.descriptor(for: id),
-              let vc = descriptor.factory() as? UIViewController
+              let vc = await descriptor.factory() as? UIViewController
         else { return nil }
         return vc
     }

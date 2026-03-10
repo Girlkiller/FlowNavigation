@@ -7,19 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A6C5D94F2F5D354400D589E9 /* FlowNavigationCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D94E2F5D354400D589E9 /* FlowNavigationCoordinator */; };
-		A6C5D9512F5D354400D589E9 /* FlowNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9502F5D354400D589E9 /* FlowNavigationCore */; };
-		A6C5D9532F5D354400D589E9 /* FlowNavigationDeepLink in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9522F5D354400D589E9 /* FlowNavigationDeepLink */; };
-		A6C5D9552F5D354400D589E9 /* FlowNavigationEnvironment in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9542F5D354400D589E9 /* FlowNavigationEnvironment */; };
-		A6C5D9572F5D354400D589E9 /* FlowNavigationGuard in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9562F5D354400D589E9 /* FlowNavigationGuard */; };
-		A6C5D9592F5D357A00D589E9 /* FlowNavigationCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9582F5D357A00D589E9 /* FlowNavigationCoordinator */; };
-		A6C5D95B2F5D357A00D589E9 /* FlowNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D95A2F5D357A00D589E9 /* FlowNavigationCore */; };
-		A6C5D95D2F5D357A00D589E9 /* FlowNavigationDeepLink in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D95C2F5D357A00D589E9 /* FlowNavigationDeepLink */; };
-		A6C5D95F2F5D357A00D589E9 /* FlowNavigationEnvironment in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D95E2F5D357A00D589E9 /* FlowNavigationEnvironment */; };
-		A6C5D9612F5D357A00D589E9 /* FlowNavigationGuard in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9602F5D357A00D589E9 /* FlowNavigationGuard */; };
-		A6C5D9632F5D357A00D589E9 /* FlowNavigationPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9622F5D357A00D589E9 /* FlowNavigationPersistence */; };
-		A6C5D9652F5D357A00D589E9 /* FlowNavigationUI in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9642F5D357A00D589E9 /* FlowNavigationUI */; };
-		A6C5D9672F5D357A00D589E9 /* FlowNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = A6C5D9662F5D357A00D589E9 /* FlowNavigationUIKit */; };
+		A64123C52F605E7D00C5A0B7 /* FlowNavigationCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = A64123C42F605E7D00C5A0B7 /* FlowNavigationCoordinator */; };
+		A64123C72F605E7D00C5A0B7 /* FlowNavigationCore in Frameworks */ = {isa = PBXBuildFile; productRef = A64123C62F605E7D00C5A0B7 /* FlowNavigationCore */; };
+		A64123C92F605E7D00C5A0B7 /* FlowNavigationDeepLink in Frameworks */ = {isa = PBXBuildFile; productRef = A64123C82F605E7D00C5A0B7 /* FlowNavigationDeepLink */; };
+		A64123CB2F605E7D00C5A0B7 /* FlowNavigationEnvironment in Frameworks */ = {isa = PBXBuildFile; productRef = A64123CA2F605E7D00C5A0B7 /* FlowNavigationEnvironment */; };
+		A64123CD2F605E7D00C5A0B7 /* FlowNavigationGuard in Frameworks */ = {isa = PBXBuildFile; productRef = A64123CC2F605E7D00C5A0B7 /* FlowNavigationGuard */; };
+		A64123CF2F605E7D00C5A0B7 /* FlowNavigationPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = A64123CE2F605E7D00C5A0B7 /* FlowNavigationPersistence */; };
+		A64123D12F605E7D00C5A0B7 /* FlowNavigationTypes in Frameworks */ = {isa = PBXBuildFile; productRef = A64123D02F605E7D00C5A0B7 /* FlowNavigationTypes */; };
+		A64123D32F605E7D00C5A0B7 /* FlowNavigationUI in Frameworks */ = {isa = PBXBuildFile; productRef = A64123D22F605E7D00C5A0B7 /* FlowNavigationUI */; };
+		A64123D52F605E7D00C5A0B7 /* FlowNavigationUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = A64123D42F605E7D00C5A0B7 /* FlowNavigationUIKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,19 +64,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6C5D94F2F5D354400D589E9 /* FlowNavigationCoordinator in Frameworks */,
-				A6C5D95B2F5D357A00D589E9 /* FlowNavigationCore in Frameworks */,
-				A6C5D9672F5D357A00D589E9 /* FlowNavigationUIKit in Frameworks */,
-				A6C5D9612F5D357A00D589E9 /* FlowNavigationGuard in Frameworks */,
-				A6C5D95D2F5D357A00D589E9 /* FlowNavigationDeepLink in Frameworks */,
-				A6C5D9532F5D354400D589E9 /* FlowNavigationDeepLink in Frameworks */,
-				A6C5D9572F5D354400D589E9 /* FlowNavigationGuard in Frameworks */,
-				A6C5D9652F5D357A00D589E9 /* FlowNavigationUI in Frameworks */,
-				A6C5D9552F5D354400D589E9 /* FlowNavigationEnvironment in Frameworks */,
-				A6C5D9512F5D354400D589E9 /* FlowNavigationCore in Frameworks */,
-				A6C5D95F2F5D357A00D589E9 /* FlowNavigationEnvironment in Frameworks */,
-				A6C5D9592F5D357A00D589E9 /* FlowNavigationCoordinator in Frameworks */,
-				A6C5D9632F5D357A00D589E9 /* FlowNavigationPersistence in Frameworks */,
+				A64123C52F605E7D00C5A0B7 /* FlowNavigationCoordinator in Frameworks */,
+				A64123D12F605E7D00C5A0B7 /* FlowNavigationTypes in Frameworks */,
+				A64123C92F605E7D00C5A0B7 /* FlowNavigationDeepLink in Frameworks */,
+				A64123CD2F605E7D00C5A0B7 /* FlowNavigationGuard in Frameworks */,
+				A64123D52F605E7D00C5A0B7 /* FlowNavigationUIKit in Frameworks */,
+				A64123CB2F605E7D00C5A0B7 /* FlowNavigationEnvironment in Frameworks */,
+				A64123CF2F605E7D00C5A0B7 /* FlowNavigationPersistence in Frameworks */,
+				A64123D32F605E7D00C5A0B7 /* FlowNavigationUI in Frameworks */,
+				A64123C72F605E7D00C5A0B7 /* FlowNavigationCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,12 +93,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A64123812F605C6B00C5A0B7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A66385F32F56F777008C688E = {
 			isa = PBXGroup;
 			children = (
 				A66385FE2F56F778008C688E /* FlowNavigationApp */,
 				A663860C2F56F779008C688E /* FlowNavigationAppTests */,
 				A66386162F56F779008C688E /* FlowNavigationAppUITests */,
+				A64123812F605C6B00C5A0B7 /* Frameworks */,
 				A66385FD2F56F778008C688E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -141,19 +141,15 @@
 			);
 			name = FlowNavigationApp;
 			packageProductDependencies = (
-				A6C5D94E2F5D354400D589E9 /* FlowNavigationCoordinator */,
-				A6C5D9502F5D354400D589E9 /* FlowNavigationCore */,
-				A6C5D9522F5D354400D589E9 /* FlowNavigationDeepLink */,
-				A6C5D9542F5D354400D589E9 /* FlowNavigationEnvironment */,
-				A6C5D9562F5D354400D589E9 /* FlowNavigationGuard */,
-				A6C5D9582F5D357A00D589E9 /* FlowNavigationCoordinator */,
-				A6C5D95A2F5D357A00D589E9 /* FlowNavigationCore */,
-				A6C5D95C2F5D357A00D589E9 /* FlowNavigationDeepLink */,
-				A6C5D95E2F5D357A00D589E9 /* FlowNavigationEnvironment */,
-				A6C5D9602F5D357A00D589E9 /* FlowNavigationGuard */,
-				A6C5D9622F5D357A00D589E9 /* FlowNavigationPersistence */,
-				A6C5D9642F5D357A00D589E9 /* FlowNavigationUI */,
-				A6C5D9662F5D357A00D589E9 /* FlowNavigationUIKit */,
+				A64123C42F605E7D00C5A0B7 /* FlowNavigationCoordinator */,
+				A64123C62F605E7D00C5A0B7 /* FlowNavigationCore */,
+				A64123C82F605E7D00C5A0B7 /* FlowNavigationDeepLink */,
+				A64123CA2F605E7D00C5A0B7 /* FlowNavigationEnvironment */,
+				A64123CC2F605E7D00C5A0B7 /* FlowNavigationGuard */,
+				A64123CE2F605E7D00C5A0B7 /* FlowNavigationPersistence */,
+				A64123D02F605E7D00C5A0B7 /* FlowNavigationTypes */,
+				A64123D22F605E7D00C5A0B7 /* FlowNavigationUI */,
+				A64123D42F605E7D00C5A0B7 /* FlowNavigationUIKit */,
 			);
 			productName = FlowNavigationApp;
 			productReference = A66385FC2F56F778008C688E /* FlowNavigationApp.app */;
@@ -238,7 +234,7 @@
 			mainGroup = A66385F32F56F777008C688E;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A6C5D94D2F5D354400D589E9 /* XCLocalSwiftPackageReference "../../../FlowNavigation" */,
+				A64123C32F605E7D00C5A0B7 /* XCLocalSwiftPackageReference "../../FlowNavigation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A66385FD2F56F778008C688E /* Products */;
@@ -607,62 +603,46 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A6C5D94D2F5D354400D589E9 /* XCLocalSwiftPackageReference "../../../FlowNavigation" */ = {
+		A64123C32F605E7D00C5A0B7 /* XCLocalSwiftPackageReference "../../FlowNavigation" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../FlowNavigation;
+			relativePath = ../../FlowNavigation;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A6C5D94E2F5D354400D589E9 /* FlowNavigationCoordinator */ = {
+		A64123C42F605E7D00C5A0B7 /* FlowNavigationCoordinator */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlowNavigationCoordinator;
 		};
-		A6C5D9502F5D354400D589E9 /* FlowNavigationCore */ = {
+		A64123C62F605E7D00C5A0B7 /* FlowNavigationCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlowNavigationCore;
 		};
-		A6C5D9522F5D354400D589E9 /* FlowNavigationDeepLink */ = {
+		A64123C82F605E7D00C5A0B7 /* FlowNavigationDeepLink */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlowNavigationDeepLink;
 		};
-		A6C5D9542F5D354400D589E9 /* FlowNavigationEnvironment */ = {
+		A64123CA2F605E7D00C5A0B7 /* FlowNavigationEnvironment */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlowNavigationEnvironment;
 		};
-		A6C5D9562F5D354400D589E9 /* FlowNavigationGuard */ = {
+		A64123CC2F605E7D00C5A0B7 /* FlowNavigationGuard */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlowNavigationGuard;
 		};
-		A6C5D9582F5D357A00D589E9 /* FlowNavigationCoordinator */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FlowNavigationCoordinator;
-		};
-		A6C5D95A2F5D357A00D589E9 /* FlowNavigationCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FlowNavigationCore;
-		};
-		A6C5D95C2F5D357A00D589E9 /* FlowNavigationDeepLink */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FlowNavigationDeepLink;
-		};
-		A6C5D95E2F5D357A00D589E9 /* FlowNavigationEnvironment */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FlowNavigationEnvironment;
-		};
-		A6C5D9602F5D357A00D589E9 /* FlowNavigationGuard */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FlowNavigationGuard;
-		};
-		A6C5D9622F5D357A00D589E9 /* FlowNavigationPersistence */ = {
+		A64123CE2F605E7D00C5A0B7 /* FlowNavigationPersistence */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlowNavigationPersistence;
 		};
-		A6C5D9642F5D357A00D589E9 /* FlowNavigationUI */ = {
+		A64123D02F605E7D00C5A0B7 /* FlowNavigationTypes */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlowNavigationTypes;
+		};
+		A64123D22F605E7D00C5A0B7 /* FlowNavigationUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlowNavigationUI;
 		};
-		A6C5D9662F5D357A00D589E9 /* FlowNavigationUIKit */ = {
+		A64123D42F605E7D00C5A0B7 /* FlowNavigationUIKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlowNavigationUIKit;
 		};

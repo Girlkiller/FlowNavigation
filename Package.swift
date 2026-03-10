@@ -34,7 +34,7 @@ let package = Package(
 
         .target(
             name: "FlowNavigationUI",
-            dependencies: ["FlowNavigationTypes", "FlowNavigationCore", "FlowNavigationGuard"],
+            dependencies: ["FlowNavigationTypes", "FlowNavigationCore", "FlowNavigationGuard", "FlowNavigationCoordinator"],
             path: "Sources/FlowNavigationUI",
             swiftSettings: [.unsafeFlags(["-enable-library-evolution"])]
         ),
