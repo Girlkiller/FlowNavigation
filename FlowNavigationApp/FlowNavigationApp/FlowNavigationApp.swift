@@ -102,7 +102,6 @@ struct FlowNavigationApp: App {
                     Text("Unknown tab")
                 }
             }
-            .environmentObject(coordinator)
         }
     }
 }

@@ -16,15 +16,18 @@ public struct FlowNavigationContainer<Root: View>: View {
     @ObservedObject var coordinator: FlowCoordinator
     let registry: RouteRegistry
     let root: (String) -> Root
+    var centerButtonStyle: ((AnyView) -> AnyView)?
 
     public init(
         coordinator: FlowCoordinator,
         registry: RouteRegistry,
-        @ViewBuilder root: @escaping (String) -> Root
+        @ViewBuilder root: @escaping (String) -> Root,
+        centerButtonStyle: ((AnyView) -> AnyView)? = nil
     ) {
         self.coordinator = coordinator
         self.registry = registry
         self.root = root
+        self.centerButtonStyle = centerButtonStyle
     }
 
     public var body: some View {
@@ -145,32 +148,35 @@ public struct FlowNavigationContainer<Root: View>: View {
     }
 
     // MARK: Center Button
-
     @ViewBuilder
     private var centerButton: some View {
-
         if let tab = centerTab {
-
             Button {
-
                 if let action = tab.action {
                     action()
                 } else {
                     coordinator.state.selectedTab = tab.id
                 }
-
             } label: {
-
-                iconView(tab.icon)
-                    .frame(width: 64, height: 64)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
-                    .shadow(radius: 5)
+                // 使用外部传入的样式闭包，如果没有提供则使用默认样式
+                (centerButtonStyle?(AnyView(iconView(tab.icon))) ?? defaultCenterButtonStyle(AnyView(iconView(tab.icon))))
             }
-            .offset(y: -30)
+            .offset(y: -15)
             .animation(.spring(), value: coordinator.state.selectedTab)
         }
+    }
+
+    // 默认按钮样式
+    private func defaultCenterButtonStyle(_ iconView: AnyView) -> AnyView {
+        AnyView(
+            iconView
+                .font(.system(size: 20, weight: .semibold))
+                .frame(width: 64, height: 64)
+                .background(Color.blue)           // 默认背景色
+                .foregroundColor(.white)          // 默认前景色
+                .clipShape(Circle())              // 默认圆形
+                .shadow(radius: 5)                // 默认阴影
+        )
     }
 
     // MARK: Icon
