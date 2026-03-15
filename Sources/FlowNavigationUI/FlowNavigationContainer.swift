@@ -81,24 +81,38 @@ public struct FlowNavigationContainer<Root: View>: View {
 
             // Sheet
             .sheet(item: sheetBinding(for: tab.id)) { sheetID in
-                let style = coordinator.presentStyle(for: sheetID)
-                modalNavigation(for: sheetID, showClose: !style.allowsDismiss)
-                    .interactiveDismissDisabled(!style.allowsDismiss)
-            }
-            .sheet(item: sheetBinding(for: tab.id)) { sheetID in
 
                 let style = coordinator.presentStyle(for: sheetID)
 
                 modalNavigation(
                     for: sheetID,
-                    showClose: !style.allowsDismiss
+                    showClose: !style.allowsDismiss,
+                    transparent: style.isTransparent
                 )
                 .interactiveDismissDisabled(!style.allowsDismiss)
             }
 
             // FullScreen
             .fullScreenCover(item: fullScreenBinding(for: tab.id)) { id in
-                modalNavigation(for: id, showClose: true)
+                let style = coordinator.presentStyle(for: id)
+
+                ZStack {
+                    if #available(iOS 16.4, *), style.isTransparent {
+                        modalNavigation(
+                            for: id,
+                            showClose: !style.allowsDismiss,
+                            transparent: style.isTransparent
+                        )
+                        .presentationBackground(.clear)
+                        .ignoresSafeArea()
+                    } else {
+                        modalNavigation(
+                            for: id,
+                            showClose: !style.allowsDismiss,
+                            transparent: style.isTransparent
+                        )
+                    }
+                }
             }
         }
     }
@@ -254,7 +268,8 @@ public struct FlowNavigationContainer<Root: View>: View {
     @ViewBuilder
     private func modalNavigation(
         for id: RouteID,
-        showClose: Bool
+        showClose: Bool,
+        transparent: Bool
     ) -> some View {
 
         let stack = coordinator.currentStack(for: id)
@@ -287,7 +302,7 @@ public struct FlowNavigationContainer<Root: View>: View {
 
                                     Image(systemName: "xmark")
                                         .font(.system(size: 16, weight: .semibold))
-                                        .foregroundColor(.black)
+                                        .foregroundColor(transparent ? .white : .black)
                                 }
                             }
                         }

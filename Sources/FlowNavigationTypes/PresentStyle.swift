@@ -8,11 +8,9 @@
 import Foundation
 
 public enum PresentStyle: Codable, Equatable {
-    case sheet(
-        allowsDismiss: Bool = true
-    )
+    case sheet(allowsDismiss: Bool = true)
 
-    case fullScreen
+    case fullScreen(transparent: Bool = false)
 }
 
 extension PresentStyle {
@@ -24,6 +22,15 @@ extension PresentStyle {
             return allowsDismiss
 
         case .fullScreen:
+            return false
+        }
+    }
+
+    public var isTransparent: Bool {
+        switch self {
+        case .fullScreen(let transparent):
+            return transparent
+        default:
             return false
         }
     }

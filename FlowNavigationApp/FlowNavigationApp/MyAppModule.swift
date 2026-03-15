@@ -23,7 +23,17 @@ struct MyAppModule: @preconcurrency RouteModule {
             }
         )
         registry.register(RouteDescriptor(id: .createPost) {
-            AnyView(Text("Create Post Page"))
+            AnyView(
+                ZStack {
+                    Color.black
+                        .opacity(0.4)
+                        .ignoresSafeArea()
+
+                    Text("Create Post Page")
+                        .font(.title)
+                        .foregroundColor(.white)
+                }
+            )
         })
 
         registry.register(

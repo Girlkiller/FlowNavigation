@@ -72,7 +72,7 @@ struct FlowNavigationApp: App {
                 icon: .system("plus"),
                 style: .centerButton,
                 action: { [weak coordinator] in
-                    coordinator?.present(.createPost, style: .fullScreen)
+                    coordinator?.present(.createPost, style: .fullScreen(transparent: true))
                 }
             ),
             TabDescriptor(
