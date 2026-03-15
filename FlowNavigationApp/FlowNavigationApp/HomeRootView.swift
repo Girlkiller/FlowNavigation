@@ -21,7 +21,7 @@ struct HomeRootView: View {
                 .font(.largeTitle)
 
             Button("Push Profile") {
-                coordinator.push(.profile)
+                coordinator.present(.profile, style: .sheet(allowsDismiss: false))
             }
 
             Button("Present Settings") {

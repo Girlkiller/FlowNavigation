@@ -10,7 +10,7 @@ import Foundation
 import FlowNavigationCore
 import FlowNavigationTypes
 
-struct MyAppModule: RouteModule {
+struct MyAppModule: @preconcurrency RouteModule {
 
     static let moduleID = "MyAppModule"
 

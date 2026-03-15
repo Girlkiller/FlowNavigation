@@ -42,7 +42,7 @@ struct FlowNavigationApp: App {
         ])
 
         // 2️⃣ 获取全局 registry
-        let localRegistry = NavigationEnvironment.shared.registry
+        let localRegistry = RouteRegistry()
 
         // 3️⃣ 注册模块
         localRegistry.registerModule(MyAppModule.self)
@@ -50,11 +50,12 @@ struct FlowNavigationApp: App {
 
         // 4️⃣ 创建 TabNavigationState 初始状态（暂时空数组）
         let initialState = TabNavigationState(selectedTab: "home", tabs: [])
-        NavigationEnvironment.shared.setupCoordinator(initialState: initialState)
+        let coordinator = FlowCoordinator(registry: localRegistry, initialState: initialState)
+        NavigationEnvironment.shared.setup(router: coordinator)
 
         // 5️⃣ 初始化 @StateObject
         _registry = StateObject(wrappedValue: localRegistry)
-        _coordinator = StateObject(wrappedValue: NavigationEnvironment.shared.coordinator!)
+        _coordinator = StateObject(wrappedValue: coordinator)
 
         // 6️⃣ 创建 Tabs，安全引用 coordinator
         self.tabs = [
@@ -71,7 +72,7 @@ struct FlowNavigationApp: App {
                 icon: .system("plus"),
                 style: .centerButton,
                 action: { [weak coordinator] in
-                    coordinator?.present(.createPost)
+                    coordinator?.present(.createPost, style: .fullScreen)
                 }
             ),
             TabDescriptor(
@@ -82,8 +83,7 @@ struct FlowNavigationApp: App {
             )
         ]
 
-        // 7️⃣ 注入 tabs 到 coordinator.state
-        NavigationEnvironment.shared.coordinator?.state.tabs = self.tabs
+        coordinator.state.tabs = tabs
     }
 
     var body: some Scene {

@@ -9,7 +9,7 @@ import SwiftUI
 import FlowNavigationCore
 import FlowNavigationTypes
 
-struct TestModule: RouteModule {
+struct TestModule: @preconcurrency RouteModule {
 
     static let moduleID = "TestModule"
 

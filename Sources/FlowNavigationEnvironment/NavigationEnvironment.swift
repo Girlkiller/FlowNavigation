@@ -11,18 +11,77 @@ import FlowNavigationCoordinator
 import FlowNavigationCore
 import FlowNavigationGuard
 
+import Foundation
+
 @MainActor
 public final class NavigationEnvironment {
-    public static let shared = NavigationEnvironment()
 
-    public let registry = RouteRegistry()
-    public private(set) var coordinator: FlowCoordinator?
+    public static let shared = NavigationEnvironment()
 
     private init() {}
 
-    // Host App 在初始化时调用
-    public func setupCoordinator(initialState: TabNavigationState, guards: [RouteGuard] = []) {
-        guard coordinator == nil else { return }
-        self.coordinator = FlowCoordinator(registry: registry, initialState: initialState, guards: guards)
+    private var _router: Router?
+
+    /// 当前 Router
+    public var router: Router {
+        guard let router = _router else {
+            fatalError(
+                """
+                NavigationEnvironment.router not configured.
+                Call NavigationEnvironment.shared.setup(router:) in App startup.
+                """
+            )
+        }
+        return router
+    }
+
+    /// 注入 Router（App 启动时调用）
+    public func setup(router: Router) {
+
+        precondition(
+            _router == nil,
+            "NavigationEnvironment.router already configured."
+        )
+
+        self._router = router
+    }
+
+}
+
+extension NavigationEnvironment: Router {
+    public func selectTab(_ tab: String) {
+        router.selectTab(tab)
+    }
+    
+    public func push(_ id: FlowNavigationTypes.RouteID) {
+        router.push(id)
+    }
+    
+    public func pop() -> FlowNavigationTypes.RouteID? {
+        router.pop()
+    }
+    
+    public func popToRoot() {
+        router.popToRoot()
+    }
+    
+    public func dismiss(_ id: FlowNavigationTypes.RouteID) {
+        router.dismiss(id)
+    }
+    
+    public func pushInPresent(_ presentID: FlowNavigationTypes.RouteID, route: FlowNavigationTypes.RouteID) {
+        router.pushInPresent(presentID, route: route)
+    }
+    
+    public func popInPresent(_ presentID: FlowNavigationTypes.RouteID) -> FlowNavigationTypes.RouteID? {
+        router.popInPresent(presentID)
+    }
+    
+    public func currentStack(for presentID: FlowNavigationTypes.RouteID) -> [FlowNavigationTypes.RouteID] {
+        router.currentStack(for: presentID)
+    }
+    
+    public func navigate(to url: URL, style: FlowNavigationTypes.NavigationStyle = .push) async {
+        await router.navigate(to: url, style: style)
     }
 }

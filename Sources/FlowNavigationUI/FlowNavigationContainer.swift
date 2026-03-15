@@ -43,19 +43,17 @@ public struct FlowNavigationContainer<Root: View>: View {
         .ignoresSafeArea(.keyboard)
     }
 
-    private var visibleTabs: [TabDescriptor] {
+    // MARK: Tabs
 
-        coordinator.state.tabs.filter {
-            $0.style != .hidden
-        }
+    private var visibleTabs: [TabDescriptor] {
+        coordinator.state.tabs.filter { $0.style != .hidden }
     }
 
     private var centerTab: TabDescriptor? {
-
-        coordinator.state.tabs.first {
-            $0.style == .centerButton
-        }
+        coordinator.state.tabs.first { $0.style == .centerButton }
     }
+
+    // MARK: Tab View
 
     @ViewBuilder
     private func tabView(for tab: TabDescriptor) -> some View {
@@ -71,20 +69,41 @@ public struct FlowNavigationContainer<Root: View>: View {
             NavigationStack(path: stackBinding(for: tab.id)) {
 
                 root(tab.id)
+
                     .navigationDestination(for: RouteID.self) { id in
                         registry.view(for: id)
                     }
             }
             .tabItem {
-
                 tabItem(tab)
             }
             .tag(tab.id)
+
+            // Sheet
             .sheet(item: sheetBinding(for: tab.id)) { sheetID in
-                sheetView(for: sheetID)
+                let style = coordinator.presentStyle(for: sheetID)
+                modalNavigation(for: sheetID, showClose: !style.allowsDismiss)
+                    .interactiveDismissDisabled(!style.allowsDismiss)
+            }
+            .sheet(item: sheetBinding(for: tab.id)) { sheetID in
+
+                let style = coordinator.presentStyle(for: sheetID)
+
+                modalNavigation(
+                    for: sheetID,
+                    showClose: !style.allowsDismiss
+                )
+                .interactiveDismissDisabled(!style.allowsDismiss)
+            }
+
+            // FullScreen
+            .fullScreenCover(item: fullScreenBinding(for: tab.id)) { id in
+                modalNavigation(for: id, showClose: true)
             }
         }
     }
+
+    // MARK: Tab Item
 
     private func tabItem(_ tab: TabDescriptor) -> some View {
 
@@ -111,6 +130,8 @@ public struct FlowNavigationContainer<Root: View>: View {
         }
     }
 
+    // MARK: Center Button
+
     @ViewBuilder
     private var centerButton: some View {
 
@@ -119,11 +140,8 @@ public struct FlowNavigationContainer<Root: View>: View {
             Button {
 
                 if let action = tab.action {
-
                     action()
-
                 } else {
-
                     coordinator.state.selectedTab = tab.id
                 }
 
@@ -140,6 +158,8 @@ public struct FlowNavigationContainer<Root: View>: View {
             .animation(.spring(), value: coordinator.state.selectedTab)
         }
     }
+
+    // MARK: Icon
 
     @ViewBuilder
     private func iconView(_ icon: TabIcon) -> some View {
@@ -169,6 +189,8 @@ public struct FlowNavigationContainer<Root: View>: View {
         }
     }
 
+    // MARK: Tab Stack Binding
+
     private func stackBinding(for tab: String) -> Binding<[RouteID]> {
 
         Binding(
@@ -181,43 +203,123 @@ public struct FlowNavigationContainer<Root: View>: View {
         )
     }
 
+    // MARK: Sheet Binding
+
     private func sheetBinding(for tab: String) -> Binding<RouteID?> {
+
         Binding(
-            get: { coordinator.state.sheets[tab] ?? nil },
+            get: {
+                coordinator.state.sheets[tab] ?? nil
+            },
             set: { newValue in
+
                 if let value = newValue {
+
+                    coordinator.ensurePresentedStack(for: value)
                     coordinator.state.sheets[tab] = value
+
                 } else {
+
                     coordinator.state.sheets.removeValue(forKey: tab)
                 }
             }
         )
     }
 
-    @ViewBuilder
-    private func sheetView(for sheetID: RouteID) -> some View {
+    // MARK: FullScreen Binding
 
-        NavigationStack(path: sheetStackBinding(for: sheetID)) {
-
-            if let rootID = coordinator.currentStack(for: sheetID).first {
-
-                registry.view(for: rootID)
-
-            } else {
-
-                Text("Empty Stack")
-            }
-        }
-    }
-
-    private func sheetStackBinding(for sheetID: RouteID) -> Binding<[RouteID]> {
+    private func fullScreenBinding(for tab: String) -> Binding<RouteID?> {
 
         Binding(
             get: {
-                coordinator.currentStack(for: sheetID)
+                coordinator.state.fullScreens[tab]  ?? nil
             },
-            set: {
-                coordinator.state.presentedStacks[sheetID] = $0
+            set: { newValue in
+
+                if let value = newValue {
+
+                    coordinator.ensurePresentedStack(for: value)
+                    coordinator.state.fullScreens[tab] = value
+
+                } else {
+
+                    coordinator.state.fullScreens.removeValue(forKey: tab)
+                }
+            }
+        )
+    }
+
+    // MARK: Modal Navigation
+
+    @ViewBuilder
+    private func modalNavigation(
+        for id: RouteID,
+        showClose: Bool
+    ) -> some View {
+
+        let stack = coordinator.currentStack(for: id)
+
+        if stack.isEmpty {
+
+            Text("Empty Stack")
+
+        } else {
+
+            let rootID = stack.first!
+
+            NavigationStack(path: presentedStackBinding(for: id, root: rootID)) {
+
+                registry.view(for: rootID)
+
+                    .navigationBarBackButtonHidden(true)
+
+                    .toolbar {
+
+                        if showClose {
+
+                            ToolbarItem(placement: .topBarLeading) {
+
+                                Button {
+
+                                    coordinator.dismiss(id)
+
+                                } label: {
+
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 16, weight: .semibold))
+                                        .foregroundColor(.black)
+                                }
+                            }
+                        }
+                    }
+
+                    .navigationDestination(for: RouteID.self) { route in
+                        registry.view(for: route)
+                    }
+            }
+            .id(id)
+        }
+    }
+
+    // MARK: Presented Stack Binding
+
+    private func presentedStackBinding(
+        for id: RouteID,
+        root: RouteID
+    ) -> Binding<[RouteID]> {
+
+        Binding(
+
+            get: {
+
+                let stack = coordinator.currentStack(for: id)
+
+                return Array(stack.dropFirst())
+            },
+
+            set: { newValue in
+
+                coordinator.state.presentedStacks[id] = [root] + newValue
             }
         )
     }
