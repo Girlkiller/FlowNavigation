@@ -21,6 +21,8 @@ public final class RouteRegistry: ObservableObject {
     private var descriptors: [RouteID: RouteDescriptor] = [:]
     private var modules: Set<String> = []
 
+    public var context: RouteContext = .init()
+
     public init() {}
 
     public func registerModule<M: RouteModule>(_ module: M.Type) {
@@ -38,9 +40,9 @@ public final class RouteRegistry: ObservableObject {
             return AnyView(Text("Unregistered Route: \(id.rawValue)"))
         }
 
-        if let view = descriptor.factory() as? AnyView {
+        if let view = descriptor.factory(context) as? AnyView {
             return view
-        } else if let vc = descriptor.factory() as? UIViewController {
+        } else if let vc = descriptor.factory(context) as? UIViewController {
             return AnyView(UIViewControllerWrapper(vc: vc))
         } else {
             return AnyView(Text("Invalid factory for: \(id.rawValue)"))

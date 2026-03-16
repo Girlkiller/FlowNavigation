@@ -18,18 +18,18 @@ struct MyAppModule: @preconcurrency RouteModule {
     static func register(into registry: RouteRegistry) {
 
         registry.register(
-            RouteDescriptor(id: .home) {
+            RouteDescriptor(id: .home) { _ in
                 AnyView(HomeRootView())
             }
         )
-        registry.register(RouteDescriptor(id: .createPost) {
+        registry.register(RouteDescriptor(id: .createPost) { context in
             AnyView(
                 ZStack {
                     Color.black
                         .opacity(0.4)
                         .ignoresSafeArea()
 
-                    Text("Create Post Page")
+                    Text("Create Post Page: " + "\(String(describing: registry.context.resolve(AppConfig.self)))")
                         .font(.title)
                         .foregroundColor(.white)
                 }
@@ -37,10 +37,10 @@ struct MyAppModule: @preconcurrency RouteModule {
         })
 
         registry.register(
-            RouteDescriptor(id: .profile) {
+            RouteDescriptor(id: .profile) { context in
 
                 let params = registry.parameters(for: .profile)
-                let userID = params["id"] ?? "unknown"
+                let userID = params.get("id") ?? "unknown"
 
                 return AnyView(
                     ProfileView(userID: userID)

@@ -8,13 +8,17 @@
 import Foundation
 
 public struct RouteDescriptor: Sendable {
+
     public let id: RouteID
-    public let factory: @MainActor @Sendable () -> Any
     public let guards: [RouteGuard]
 
-    public init(id: RouteID,
-                guards: [RouteGuard] = [],
-                factory: @escaping @MainActor @Sendable () -> Any) {
+    public let factory: @MainActor @Sendable (RouteContext) -> Any
+
+    public init(
+        id: RouteID,
+        guards: [RouteGuard] = [],
+        factory: @escaping @MainActor @Sendable (RouteContext) -> Any
+    ) {
         self.id = id
         self.guards = guards
         self.factory = factory

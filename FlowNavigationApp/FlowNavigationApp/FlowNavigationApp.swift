@@ -22,6 +22,10 @@ extension RouteID {
     static let testDetail = RouteID("testDetail")
 }
 
+struct AppConfig {
+    let baseURL: String
+}
+
 // MARK: - Host App
 @main
 struct FlowNavigationApp: App {
@@ -44,6 +48,7 @@ struct FlowNavigationApp: App {
         // 2️⃣ 获取全局 registry
         let localRegistry = RouteRegistry()
 
+        localRegistry.context.register(AppConfig(baseURL: "https://www.baidu.com"))
         // 3️⃣ 注册模块
         localRegistry.registerModule(MyAppModule.self)
         localRegistry.registerModule(TestModule.self)

@@ -17,10 +17,10 @@ struct TestModule: @preconcurrency RouteModule {
     static func register(into registry: RouteRegistry) {
 
         registry.register(
-            RouteDescriptor(id: .testDetail) {
+            RouteDescriptor(id: .testDetail) { context in
 
                 let params = registry.parameters(for: .testDetail)
-                let title = params["title"] ?? "Default Title"
+                let title = params.get("title") ?? "Default Title"
 
                 return AnyView(
                     TestDetailView(title: title)
