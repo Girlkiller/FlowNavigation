@@ -40,7 +40,8 @@ public final class FlowCoordinator: ObservableObject, Router {
     private func canNavigate(to id: RouteID) async -> Bool {
 
         guard let descriptor = registry.descriptor(for: id) else {
-            return true
+            print("cannot navigate routeID: \(id)")
+            return false
         }
 
         let guards = descriptor.guards + guards
@@ -177,9 +178,12 @@ public final class FlowCoordinator: ObservableObject, Router {
         await navigate(to: url, style: style, parsers: [])
     }
 
-    @MainActor
     public func presentStyle(for id: RouteID) -> PresentStyle {
 
         state.presentStyles[id] ?? .sheet()
+    }
+
+    public func currentTopRoute(for tab: String) -> RouteID? {
+        state.stacks[tab]?.last
     }
 }

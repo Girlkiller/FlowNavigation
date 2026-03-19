@@ -37,7 +37,7 @@ struct HomeRootView: View {
             Button("DeepLink → Profile") {
 
                 Task {
-                    let url = URL(string: "myapp://profile?id=888")!
+                    let url = URL(string: "myapp://app/profile?id=888")!
                     await coordinator.navigate(to: url)
                 }
             }
@@ -45,7 +45,7 @@ struct HomeRootView: View {
             Button("DeepLink → Detail") {
 
                 Task {
-                    let url = URL(string: "myapp://detail?title=HelloDeepLink")!
+                    let url = URL(string: "myapp://app/detail?title=HelloDeepLink")!
                     await coordinator.navigate(to: url)
                 }
             }

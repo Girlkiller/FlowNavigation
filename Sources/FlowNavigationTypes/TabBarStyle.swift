@@ -1,0 +1,105 @@
+//
+//  File.swift
+//  FlowNavigation
+//
+//  Created by feng qiu on 2026/3/18.
+//
+
+import Foundation
+import SwiftUI
+
+import SwiftUI
+
+public struct TabBarStyle {
+
+    // MARK: - TabBar 基础样式
+    public var height: CGFloat
+    public var horizontalPadding: CGFloat
+    public var itemSpacing: CGFloat
+
+    public var iconSize: CGFloat
+    public var selectedIconScale: CGFloat
+
+    public var font: Font
+    public var selectedFont: Font
+    public var selectedColor: Color
+    public var normalColor: Color
+
+    public var backgroundColor: Color
+    public var backgroundMaterial: Material?
+    public var cornerRadius: CGFloat
+
+    public enum WidthMode {
+        case full
+        case inset
+    }
+    public var widthMode: WidthMode
+
+    // MARK: - 中间大按钮样式
+    public var centerSize: CGFloat
+    public var centerOffsetY: CGFloat
+    public var centerBackgroundColor: Color
+    public var centerForegroundColor: Color
+    public var centerCornerRadius: CGFloat
+    public var centerShadowRadius: CGFloat
+
+    // MARK: - 红点样式
+    public var badgeFontSize: CGFloat
+    public var badgeSize: CGFloat
+    public var badgeBackgroundColor: Color
+    public var badgeTextColor: Color
+    public var badgeOffset: CGSize
+
+    // MARK: - 默认初始化方法
+    public init(
+        height: CGFloat = 70,
+        horizontalPadding: CGFloat = 16,
+        itemSpacing: CGFloat = 0,
+        iconSize: CGFloat = 24,
+        selectedIconScale: CGFloat = 1.15,
+        font: Font = .system(size: 12),
+        selectedFont: Font = .system(size: 12, weight: .medium),
+        selectedColor: Color = .blue,
+        normalColor: Color = .gray,
+        backgroundColor: Color = .clear,
+        backgroundMaterial: Material? = .ultraThinMaterial,
+        cornerRadius: CGFloat = 0,
+        widthMode: WidthMode = .full,
+        centerSize: CGFloat = 64,
+        centerOffsetY: CGFloat = -25,
+        centerBackgroundColor: Color = .blue,
+        centerForegroundColor: Color = .white,
+        centerCornerRadius: CGFloat = 32,
+        centerShadowRadius: CGFloat = 6,
+        badgeFontSize: CGFloat = 10,
+        badgeSize: CGFloat = 18,
+        badgeBackgroundColor: Color = .red,
+        badgeTextColor: Color = .white,
+        badgeOffset: CGSize = CGSize(width: 10, height: -6)
+    ) {
+        self.height = height
+        self.horizontalPadding = horizontalPadding
+        self.itemSpacing = itemSpacing
+        self.iconSize = iconSize
+        self.selectedIconScale = selectedIconScale
+        self.font = font
+        self.selectedFont = selectedFont
+        self.selectedColor = selectedColor
+        self.normalColor = normalColor
+        self.backgroundColor = backgroundColor
+        self.backgroundMaterial = backgroundMaterial
+        self.cornerRadius = cornerRadius
+        self.widthMode = widthMode
+        self.centerSize = centerSize
+        self.centerOffsetY = centerOffsetY
+        self.centerBackgroundColor = centerBackgroundColor
+        self.centerForegroundColor = centerForegroundColor
+        self.centerCornerRadius = centerCornerRadius
+        self.centerShadowRadius = centerShadowRadius
+        self.badgeFontSize = badgeFontSize
+        self.badgeSize = badgeSize
+        self.badgeBackgroundColor = badgeBackgroundColor
+        self.badgeTextColor = badgeTextColor
+        self.badgeOffset = badgeOffset
+    }
+}

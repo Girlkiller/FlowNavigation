@@ -11,15 +11,17 @@ public struct RouteDescriptor: Sendable {
 
     public let id: RouteID
     public let guards: [RouteGuard]
-
+    public let hidesTabBar: Bool
     public let factory: @MainActor @Sendable (RouteContext) -> Any
 
     public init(
         id: RouteID,
+        hidesTabBar: Bool = true,
         guards: [RouteGuard] = [],
         factory: @escaping @MainActor @Sendable (RouteContext) -> Any
     ) {
         self.id = id
+        self.hidesTabBar = hidesTabBar
         self.guards = guards
         self.factory = factory
     }
