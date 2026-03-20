@@ -21,10 +21,13 @@ struct CustomTabBar: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
+            // TabBar 背景 + 左右按钮
             tabBarContent
+
+            // 中间大按钮悬浮在 TabBar 上方
             if let centerTab {
                 centerButton(centerTab)
-                    .zIndex(1) // 浮层保证覆盖
+                    .zIndex(1) // 保证浮层覆盖
             }
         }
         .padding(style.widthMode == .inset ? style.horizontalPadding : 0)
@@ -39,9 +42,9 @@ struct CustomTabBar: View {
         HStack(spacing: style.itemSpacing) {
             ForEach(tabs) { tab in
                 if tab.style == .centerButton {
-                    // ✅ 中间按钮占位
+                    // ✅ 中间按钮占位，保证左右 Tab 间距
                     Color.clear
-                        .frame(width: style.centerSize + 12) // 给浮层留出空间
+                        .frame(width: style.centerSize + 12)
                 } else {
                     tabItem(tab)
                         .frame(maxWidth: .infinity)
@@ -103,21 +106,44 @@ struct CustomTabBar: View {
     private func centerButton(_ tab: TabDescriptor) -> some View {
         Button(action: onCenterTap) {
             let icon = AnyView(iconView(tab.icon))
-            (centerButtonStyle?(icon) ?? defaultCenterStyle(icon))
+            (centerButtonStyle?(icon) ?? AnyView(defaultCenterStyle(tab.icon)))
         }
-        .offset(y: style.centerOffsetY)
+        .offset(y: style.centerOffsetY) // 控制凸起高度
     }
 
-    private func defaultCenterStyle(_ icon: AnyView) -> AnyView {
-        AnyView(
-            icon
-                .font(.system(size: style.centerIconFontSize, weight: style.centerIconFontWeight))
+    private func defaultCenterStyle(_ icon: TabIcon) -> some View {
+        ZStack {
+            // 背景按钮
+            RoundedRectangle(cornerRadius: style.centerCornerRadius)
+                .fill(style.centerBackgroundColor)
                 .frame(width: style.centerSize, height: style.centerSize)
-                .background(style.centerBackgroundColor)
-                .foregroundColor(style.centerForegroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: style.centerCornerRadius))
                 .shadow(radius: style.centerShadowRadius)
-        )
+
+            // 图标
+            switch icon {
+            case .system(let name):
+                Image(systemName: name)
+                    .resizable() // SF Symbols 可用 resizable
+                    .scaledToFit()
+                    .frame(width: style.centerIconSize, height: style.centerIconSize)
+                    .foregroundColor(style.centerForegroundColor)
+            case .asset(let name):
+                Image(name)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: style.centerIconSize, height: style.centerIconSize)
+                    .foregroundColor(style.centerForegroundColor)
+            case .remote(let url):
+                AsyncImage(url: url) { image in
+                    image.resizable()
+                        .scaledToFit()
+                        .frame(width: style.centerIconSize, height: style.centerIconSize)
+                        .foregroundColor(style.centerForegroundColor)
+                } placeholder: {
+                    ProgressView()
+                }
+            }
+        }
     }
 
     // MARK: - Icon View
@@ -126,6 +152,7 @@ struct CustomTabBar: View {
         switch icon {
         case .system(let name):
             Image(systemName: name)
+                .renderingMode(.template)
         case .asset(let name):
             Image(name)
                 .resizable()

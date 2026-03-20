@@ -39,6 +39,7 @@ public struct TabBarStyle {
 
     // MARK: - 中间大按钮样式
     public var centerSize: CGFloat
+    public var centerIconSize: CGFloat
     public var centerIconFontSize: CGFloat
     public var centerIconFontWeight: Font.Weight
     public var centerOffsetY: CGFloat
@@ -74,6 +75,7 @@ public struct TabBarStyle {
         cornerRadius: CGFloat = 0,
         widthMode: WidthMode = .full,
         centerSize: CGFloat = 64,
+        centerIconSize: CGFloat = 20,
         centerIconFontSize: CGFloat = 16,
         centerIconFontWeight: Font.Weight = .semibold,
         centerOffsetY: CGFloat = -45,
@@ -105,6 +107,7 @@ public struct TabBarStyle {
         self.cornerRadius = cornerRadius
         self.widthMode = widthMode
         self.centerSize = centerSize
+        self.centerIconSize = centerIconSize
         self.centerIconFontSize = centerIconFontSize
         self.centerIconFontWeight = centerIconFontWeight
         self.centerOffsetY = centerOffsetY
