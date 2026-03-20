@@ -18,6 +18,8 @@ extension RouteID {
     static let home = RouteID("home")
     static let profile = RouteID("profile")
     static let settings = RouteID("settings")
+    static let remind = RouteID("remind")
+    static let me = RouteID("me")
     static let createPost = RouteID("createPost")
     static let testDetail = RouteID("testDetail")
 }
@@ -72,6 +74,12 @@ struct FlowNavigationApp: App {
                 rootRoute: .home
             ),
             TabDescriptor(
+                id: "profile",
+                title: "Profile",
+                icon: .system("person"),
+                rootRoute: .profile
+            ),
+            TabDescriptor(
                 id: "create",
                 title: "",
                 icon: .system("plus"),
@@ -81,8 +89,14 @@ struct FlowNavigationApp: App {
                 }
             ),
             TabDescriptor(
-                id: "profile",
-                title: "Profile",
+                id: "remind",
+                title: "Remind",
+                icon: .system("calendar"),
+                rootRoute: .profile
+            ),
+            TabDescriptor(
+                id: "me",
+                title: "Me",
                 icon: .system("person"),
                 rootRoute: .profile
             )
@@ -103,6 +117,10 @@ struct FlowNavigationApp: App {
                     HomeRootView()
                 case "profile":
                     ProfileView(userID: "123123")
+                case "remind":
+                    RemindView(id: "remind 123456")
+                case "me":
+                    MeView(userID: "abacsd")
                 default:
                     Text("Unknown tab")
                 }

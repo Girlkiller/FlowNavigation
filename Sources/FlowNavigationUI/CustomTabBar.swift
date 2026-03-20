@@ -20,9 +20,12 @@ struct CustomTabBar: View {
     let onCenterTap: () -> Void
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             tabBarContent
-            if let centerTab { centerButton(centerTab) }
+            if let centerTab {
+                centerButton(centerTab)
+                    .zIndex(1) // 浮层保证覆盖
+            }
         }
         .padding(style.widthMode == .inset ? style.horizontalPadding : 0)
         .frame(maxWidth: style.widthMode == .full ? .infinity : nil)
@@ -31,11 +34,19 @@ struct CustomTabBar: View {
         .animation(.interactiveSpring(response: 0.35, dampingFraction: 0.85), value: hidden)
     }
 
+    // MARK: - TabBar Content
     private var tabBarContent: some View {
         HStack(spacing: style.itemSpacing) {
             ForEach(tabs) { tab in
-                if tab.style == .centerButton { Spacer() }
-                else { tabItem(tab).frame(maxWidth: .infinity) }
+                if tab.style == .centerButton {
+                    // ✅ 中间按钮占位
+                    Color.clear
+                        .frame(width: style.centerSize + 12) // 给浮层留出空间
+                } else {
+                    tabItem(tab)
+                        .frame(maxWidth: .infinity)
+                        .contentShape(Rectangle()) // 点击区域扩展
+                }
             }
         }
         .padding(.top, style.topPadding)
@@ -45,6 +56,7 @@ struct CustomTabBar: View {
         .clipShape(RoundedRectangle(cornerRadius: style.cornerRadius))
     }
 
+    // MARK: - Background
     @ViewBuilder
     private var backgroundView: some View {
         if let material = style.backgroundMaterial {
@@ -54,6 +66,7 @@ struct CustomTabBar: View {
         }
     }
 
+    // MARK: - Tab Item
     private func tabItem(_ tab: TabDescriptor) -> some View {
         Button {
             onTabSelected(tab.id)
@@ -64,14 +77,18 @@ struct CustomTabBar: View {
                         .font(.system(size: style.iconFontSize))
                         .frame(width: style.iconSize, height: style.iconSize)
                         .scaleEffect(selectedTab == tab.id ? style.selectedIconScale : 1)
-                    if let badge = tab.badge, badge > 0 { badgeView(badge) }
+                    if let badge = tab.badge, badge > 0 {
+                        badgeView(badge)
+                    }
                 }
-                Text(tab.title).font(selectedTab == tab.id ? style.selectedFont : style.font)
+                Text(tab.title)
+                    .font(selectedTab == tab.id ? style.selectedFont : style.font)
             }
             .foregroundColor(selectedTab == tab.id ? style.selectedColor : style.normalColor)
         }
     }
 
+    // MARK: - Badge
     private func badgeView(_ value: Int) -> some View {
         Text("\(value)")
             .font(.system(size: style.badgeFontSize))
@@ -82,6 +99,7 @@ struct CustomTabBar: View {
             .offset(style.badgeOffset)
     }
 
+    // MARK: - Center Button
     private func centerButton(_ tab: TabDescriptor) -> some View {
         Button(action: onCenterTap) {
             let icon = AnyView(iconView(tab.icon))
@@ -102,13 +120,22 @@ struct CustomTabBar: View {
         )
     }
 
+    // MARK: - Icon View
     @ViewBuilder
     private func iconView(_ icon: TabIcon) -> some View {
         switch icon {
-        case .system(let name): Image(systemName: name)
-        case .asset(let name): Image(name).resizable().scaledToFit()
+        case .system(let name):
+            Image(systemName: name)
+        case .asset(let name):
+            Image(name)
+                .resizable()
+                .scaledToFit()
         case .remote(let url):
-            AsyncImage(url: url) { image in image.resizable().scaledToFit() } placeholder: { ProgressView() }
+            AsyncImage(url: url) { image in
+                image.resizable().scaledToFit()
+            } placeholder: {
+                ProgressView()
+            }
         }
     }
 }

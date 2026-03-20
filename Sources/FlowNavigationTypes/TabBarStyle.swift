@@ -8,8 +8,6 @@
 import Foundation
 import SwiftUI
 
-import SwiftUI
-
 public struct TabBarStyle {
 
     // MARK: - TabBar 基础样式
@@ -78,7 +76,7 @@ public struct TabBarStyle {
         centerSize: CGFloat = 64,
         centerIconFontSize: CGFloat = 16,
         centerIconFontWeight: Font.Weight = .semibold,
-        centerOffsetY: CGFloat = -25,
+        centerOffsetY: CGFloat = -45,
         centerBackgroundColor: Color = .blue,
         centerForegroundColor: Color = .white,
         centerCornerRadius: CGFloat = 32,

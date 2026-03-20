@@ -33,6 +33,7 @@ struct MyAppModule: @preconcurrency RouteModule {
                             NavigationEnvironment.shared.dismiss(.createPost)
                         } label: {
                             Image(systemName: "xmark")
+                                .tint(.black)
                         }
                     )
                 )
