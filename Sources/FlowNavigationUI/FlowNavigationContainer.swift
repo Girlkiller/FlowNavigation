@@ -39,6 +39,11 @@ public struct FlowNavigationContainer<Root: View>: View {
     public var body: some View {
         GeometryReader { proxy in
             let bottomSafe = proxy.safeAreaInsets.bottom
+            let tabBarStyle = {
+                var style = self.tabBarStyle
+                style.bottomSafeArea = bottomSafe
+                return style
+            }()
             ZStack(alignment: .bottom) {
 
                 // MARK: Content
@@ -66,6 +71,7 @@ public struct FlowNavigationContainer<Root: View>: View {
                 .padding(.bottom, 0) // ⚡️背景自带 safeArea
             }
             .ignoresSafeArea(.keyboard)
+            .ignoresSafeArea(.all)
         }
     }
 

@@ -38,9 +38,9 @@ struct CustomTabBar: View {
                 else { tabItem(tab).frame(maxWidth: .infinity) }
             }
         }
-        .padding(.top, 10)
-        .padding(.bottom, 0)
+        .padding(.top, style.topPadding)
         .frame(height: style.height)
+        .padding(.bottom, style.bottomSafeArea + style.bottomPadding)
         .background(backgroundView)
         .clipShape(RoundedRectangle(cornerRadius: style.cornerRadius))
     }
@@ -61,6 +61,7 @@ struct CustomTabBar: View {
             VStack(spacing: 4) {
                 ZStack(alignment: .topTrailing) {
                     iconView(tab.icon)
+                        .font(.system(size: style.iconFontSize))
                         .frame(width: style.iconSize, height: style.iconSize)
                         .scaleEffect(selectedTab == tab.id ? style.selectedIconScale : 1)
                     if let badge = tab.badge, badge > 0 { badgeView(badge) }
@@ -92,6 +93,7 @@ struct CustomTabBar: View {
     private func defaultCenterStyle(_ icon: AnyView) -> AnyView {
         AnyView(
             icon
+                .font(.system(size: style.centerIconFontSize, weight: style.centerIconFontWeight))
                 .frame(width: style.centerSize, height: style.centerSize)
                 .background(style.centerBackgroundColor)
                 .foregroundColor(style.centerForegroundColor)

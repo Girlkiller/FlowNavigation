@@ -14,9 +14,13 @@ public struct TabBarStyle {
 
     // MARK: - TabBar 基础样式
     public var height: CGFloat
+    public var bottomSafeArea: CGFloat
     public var horizontalPadding: CGFloat
+    public var topPadding: CGFloat
+    public var bottomPadding: CGFloat
     public var itemSpacing: CGFloat
 
+    public var iconFontSize: CGFloat
     public var iconSize: CGFloat
     public var selectedIconScale: CGFloat
 
@@ -37,6 +41,8 @@ public struct TabBarStyle {
 
     // MARK: - 中间大按钮样式
     public var centerSize: CGFloat
+    public var centerIconFontSize: CGFloat
+    public var centerIconFontWeight: Font.Weight
     public var centerOffsetY: CGFloat
     public var centerBackgroundColor: Color
     public var centerForegroundColor: Color
@@ -52,20 +58,26 @@ public struct TabBarStyle {
 
     // MARK: - 默认初始化方法
     public init(
-        height: CGFloat = 70,
+        height: CGFloat = 60,
+        bottomSafeArea: CGFloat = 0,
         horizontalPadding: CGFloat = 16,
-        itemSpacing: CGFloat = 0,
-        iconSize: CGFloat = 24,
-        selectedIconScale: CGFloat = 1.15,
+        topPadding: CGFloat = 10,
+        bottomPadding: CGFloat = 0,
+        itemSpacing: CGFloat = 10,
+        iconFontSize: CGFloat = 20,
+        iconSize: CGFloat = 28,
+        selectedIconScale: CGFloat = 1,
         font: Font = .system(size: 12),
-        selectedFont: Font = .system(size: 12, weight: .medium),
+        selectedFont: Font = .system(size: 12),
         selectedColor: Color = .blue,
         normalColor: Color = .gray,
         backgroundColor: Color = .clear,
-        backgroundMaterial: Material? = .ultraThinMaterial,
+        backgroundMaterial: Material? = .thinMaterial,
         cornerRadius: CGFloat = 0,
         widthMode: WidthMode = .full,
         centerSize: CGFloat = 64,
+        centerIconFontSize: CGFloat = 16,
+        centerIconFontWeight: Font.Weight = .semibold,
         centerOffsetY: CGFloat = -25,
         centerBackgroundColor: Color = .blue,
         centerForegroundColor: Color = .white,
@@ -78,8 +90,12 @@ public struct TabBarStyle {
         badgeOffset: CGSize = CGSize(width: 10, height: -6)
     ) {
         self.height = height
+        self.bottomSafeArea = bottomSafeArea
         self.horizontalPadding = horizontalPadding
+        self.topPadding = topPadding
+        self.bottomPadding = bottomPadding
         self.itemSpacing = itemSpacing
+        self.iconFontSize = iconFontSize
         self.iconSize = iconSize
         self.selectedIconScale = selectedIconScale
         self.font = font
@@ -91,6 +107,8 @@ public struct TabBarStyle {
         self.cornerRadius = cornerRadius
         self.widthMode = widthMode
         self.centerSize = centerSize
+        self.centerIconFontSize = centerIconFontSize
+        self.centerIconFontWeight = centerIconFontWeight
         self.centerOffsetY = centerOffsetY
         self.centerBackgroundColor = centerBackgroundColor
         self.centerForegroundColor = centerForegroundColor
