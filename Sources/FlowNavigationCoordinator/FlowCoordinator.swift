@@ -183,7 +183,7 @@ public final class FlowCoordinator: ObservableObject, Router {
         state.presentStyles[id] ?? .sheet()
     }
 
-    public func currentTopRoute(for tab: String) -> RouteID? {
-        state.stacks[tab]?.last
+    public func currentTopRoute(for tab: String) -> RouteID {
+        state.stacks[tab]?.last ?? RouteID(tab)
     }
 }

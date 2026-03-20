@@ -10,18 +10,21 @@ import Foundation
 public struct RouteDescriptor: Sendable {
 
     public let id: RouteID
-    public let guards: [RouteGuard]
     public let hidesTabBar: Bool
+    public let navBar: NavigationBarConfig
+    public let guards: [RouteGuard]
     public let factory: @MainActor @Sendable (RouteContext) -> Any
 
     public init(
         id: RouteID,
         hidesTabBar: Bool = true,
+        navBar: NavigationBarConfig = NavigationBarConfig(),
         guards: [RouteGuard] = [],
         factory: @escaping @MainActor @Sendable (RouteContext) -> Any
     ) {
         self.id = id
         self.hidesTabBar = hidesTabBar
+        self.navBar = navBar
         self.guards = guards
         self.factory = factory
     }

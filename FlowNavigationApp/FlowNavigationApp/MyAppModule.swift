@@ -9,6 +9,7 @@ import SwiftUI
 import Foundation
 import FlowNavigationCore
 import FlowNavigationTypes
+import FlowNavigationEnvironment
 
 struct MyAppModule: @preconcurrency RouteModule {
 
@@ -22,7 +23,21 @@ struct MyAppModule: @preconcurrency RouteModule {
                 AnyView(HomeRootView())
             }
         )
-        registry.register(RouteDescriptor(id: .createPost) { context in
+        registry.register(RouteDescriptor(id: .createPost, navBar: NavigationBarConfig(
+            title: "弹窗",
+            hidesBackButton: true,
+            leadingItems: [
+                NavBarItem(
+                    view: AnyView(
+                        Button {
+                            NavigationEnvironment.shared.dismiss(.createPost)
+                        } label: {
+                            Image(systemName: "xmark")
+                        }
+                    )
+                )
+            ]
+        )) { context in
             AnyView(
                 ZStack {
                     Color.black
