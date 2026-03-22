@@ -37,7 +37,7 @@ public final class FlowCoordinator: ObservableObject, Router {
 
     // MARK: - Guard Check
 
-    private func canNavigate(to id: RouteID) async -> Bool {
+    func canNavigate(to id: RouteID) async -> Bool {
 
         guard let descriptor = registry.descriptor(for: id) else {
             print("cannot navigate routeID: \(id)")
@@ -53,17 +53,45 @@ public final class FlowCoordinator: ObservableObject, Router {
 
         for g in guards {
 
-            if !(await g.canNavigate(to: id)) {
+            let result = await g.evaluate(to: id)
 
-                if let auth = g as? AuthGuard {
-                    present(auth.loginRouteID())
-                }
+            switch result {
 
+            case .allow:
+                continue
+
+            case .deny:
+                return false
+
+            case .redirect(let redirect):
+                handleRedirect(redirect)
                 return false
             }
         }
 
         return true
+    }
+
+    func handleRedirect(_ redirect: NavigationRedirect) {
+
+        switch redirect.style {
+
+        case .push:
+            push(redirect.routeID)
+        case .present(let style):
+            switch style {
+            case .sheet(let allowsDismiss):
+                present(
+                    redirect.routeID,
+                    style: .sheet(allowsDismiss: allowsDismiss)
+                )
+            case .fullScreen(let transparent):
+                present(
+                    redirect.routeID,
+                    style: .fullScreen(transparent: transparent)
+                )
+            }
+        }
     }
 
     // MARK: - Tab Navigation

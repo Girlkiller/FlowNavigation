@@ -7,11 +7,6 @@
 
 import Foundation
 
-public enum NavigationStyle {
-    case push
-    case present(PresentStyle)
-}
-
 public protocol Router {
     func selectTab(_ tab: String)
     func push(_ id: RouteID)

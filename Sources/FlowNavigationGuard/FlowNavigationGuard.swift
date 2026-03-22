@@ -11,22 +11,28 @@ import FlowNavigationTypes
 
 public final class AuthGuard: RouteGuard {
 
+    private let redirect: NavigationRedirect
     private let isLoggedIn: @Sendable () async -> Bool
-    private let loginRoute: RouteID
 
-    public init(isLoggedIn: @escaping @Sendable () async -> Bool, loginRoute: RouteID) {
+    public init(redirect: NavigationRedirect, isLoggedIn: @escaping @Sendable () async -> Bool) {
+        self.redirect = redirect
         self.isLoggedIn = isLoggedIn
-        self.loginRoute = loginRoute
     }
 
-    public func canNavigate(to route: RouteID) async -> Bool {
-        if route == loginRouteID() {
-            return true
+    public func evaluate(to routeID: RouteID) async -> GuardResult {
+        if routeID == loginRouteID() {
+            return .allow
         }
-        return await isLoggedIn()
+        let loggedIn = await isLoggedIn()
+
+        if loggedIn {
+            return .allow
+        } else {
+            return .redirect(redirect)
+        }
     }
 
     public func loginRouteID() -> RouteID {
-        loginRoute
+        redirect.routeID
     }
 }

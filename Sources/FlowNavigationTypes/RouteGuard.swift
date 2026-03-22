@@ -8,5 +8,11 @@
 import Foundation
 
 public protocol RouteGuard: Sendable {
-    func canNavigate(to route: RouteID) async -> Bool
+    func evaluate(to routeID: RouteID) async -> GuardResult
+}
+
+extension RouteGuard {
+    func evaluate(to routeID: RouteID) async -> GuardResult {
+        return .allow
+    }
 }

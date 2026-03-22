@@ -34,17 +34,6 @@ extension FlowCoordinator {
                 // 保存参数到 registry，让页面 factory 获取
                 registry.setParameters(params, for: routeID)
 
-                // 判断 routeDescriptor 是否有 guards
-                if let descriptor = registry.descriptor(for: routeID) {
-                    for guardObj in descriptor.guards {
-                        if !(await guardObj.canNavigate(to: routeID)) {
-                            if let auth = guardObj as? AuthGuard {
-                                self.present(auth.loginRouteID())
-                            }
-                            return
-                        }
-                    }
-                }
                 // 直接打开页面
                 switch style {
                 case .push:
