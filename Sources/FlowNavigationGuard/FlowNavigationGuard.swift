@@ -20,7 +20,10 @@ public final class AuthGuard: RouteGuard {
     }
 
     public func canNavigate(to route: RouteID) async -> Bool {
-        await isLoggedIn()
+        if route == loginRouteID() {
+            return true
+        }
+        return await isLoggedIn()
     }
 
     public func loginRouteID() -> RouteID {

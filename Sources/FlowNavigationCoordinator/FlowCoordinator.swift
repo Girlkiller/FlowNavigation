@@ -44,6 +44,11 @@ public final class FlowCoordinator: ObservableObject, Router {
             return false
         }
 
+        guard !descriptor.skipGuards else {
+            print("skip guard routeID: \(id)")
+            return true
+        }
+
         let guards = descriptor.guards + guards
 
         for g in guards {
