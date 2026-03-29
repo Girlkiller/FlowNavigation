@@ -53,7 +53,7 @@ extension NavigationEnvironment: Router {
         router.selectTab(tab)
     }
     
-    public func push(_ id: FlowNavigationTypes.RouteID, scope: NavigationScope) {
+    public func push(_ id: FlowNavigationTypes.RouteID, scope: NavigationScope = .automatic) {
         router.push(id, scope: scope)
     }
     
