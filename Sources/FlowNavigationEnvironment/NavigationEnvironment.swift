@@ -53,16 +53,16 @@ extension NavigationEnvironment: Router {
         router.selectTab(tab)
     }
     
-    public func push(_ id: FlowNavigationTypes.RouteID) {
-        router.push(id)
+    public func push(_ id: FlowNavigationTypes.RouteID, scope: NavigationScope) {
+        router.push(id, scope: scope)
     }
     
-    public func pop() -> FlowNavigationTypes.RouteID? {
-        router.pop()
+    public func pop(scope: NavigationScope = .automatic) -> FlowNavigationTypes.RouteID? {
+        router.pop(scope: scope)
     }
     
-    public func popToRoot() {
-        router.popToRoot()
+    public func popToRoot(scope: NavigationScope = .automatic) {
+        router.popToRoot(scope: scope)
     }
     
     public func dismiss(_ id: FlowNavigationTypes.RouteID) {
@@ -81,7 +81,7 @@ extension NavigationEnvironment: Router {
         router.currentStack(for: presentID)
     }
     
-    public func navigate(to url: URL, style: FlowNavigationTypes.NavigationStyle = .push) async {
-        await router.navigate(to: url, style: style)
+    public func navigate(to url: URL, style: FlowNavigationTypes.NavigationStyle = .push, scope: NavigationScope = .automatic) async {
+        await router.navigate(to: url, style: style, scope: scope)
     }
 }

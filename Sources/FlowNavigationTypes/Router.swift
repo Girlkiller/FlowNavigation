@@ -9,15 +9,15 @@ import Foundation
 
 public protocol Router {
     func selectTab(_ tab: String)
-    func push(_ id: RouteID)
-    func pop() -> RouteID?
-    func popToRoot()
+    func push(_ id: RouteID, scope: NavigationScope)
+    func pop(scope: NavigationScope) -> RouteID?
+    func popToRoot(scope: NavigationScope)
     func present(_ id: RouteID, initialStack: [RouteID]?)
     func dismiss(_ id: RouteID)
     func pushInPresent(_ presentID: RouteID, route: RouteID)
     func popInPresent(_ presentID: RouteID) -> RouteID?
     func currentStack(for presentID: RouteID) -> [RouteID]
-    func navigate(to url: URL, style: NavigationStyle) async
+    func navigate(to url: URL, style: NavigationStyle, scope: NavigationScope) async
 }
 
 extension Router {
@@ -25,7 +25,7 @@ extension Router {
         present(id, initialStack: initialStack)
     }
 
-    func navigate(to url: URL, style: NavigationStyle = .push) async {
-        await navigate(to: url, style: style)
+    public func navigate(to url: URL, style: NavigationStyle = .push, scope: NavigationScope = .automatic) async {
+        await navigate(to: url, style: style, scope: scope)
     }
 }

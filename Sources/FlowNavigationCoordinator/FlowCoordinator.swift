@@ -94,6 +94,24 @@ public final class FlowCoordinator: ObservableObject, Router {
         }
     }
 
+    private func currentActivePresentedID() -> RouteID? {
+        if let id = state.presentationOrder.last {
+            return id
+        }
+
+        // fullScreen 优先
+        if let id = state.fullScreens[state.selectedTab] {
+            return id
+        }
+
+        // 再看 sheet
+        if let id = state.sheets[state.selectedTab] {
+            return id
+        }
+
+        return nil
+    }
+
     // MARK: - Tab Navigation
 
     public func selectTab(_ tab: String) {
@@ -102,27 +120,83 @@ public final class FlowCoordinator: ObservableObject, Router {
 
     // MARK: - Push
 
-    public func push(_ id: RouteID) {
+    public func push(
+        _ id: RouteID,
+        scope: NavigationScope = .automatic
+    ) {
 
         Task {
 
             guard await canNavigate(to: id) else { return }
 
-            state.stacks[state.selectedTab, default: []].append(id)
+            switch scope {
+
+            case .automatic:
+                if let presentID = currentActivePresentedID() {
+                    state.presentedStacks[presentID, default: [presentID]].append(id)
+                } else {
+                    state.stacks[state.selectedTab, default: []].append(id)
+                }
+
+            case .tab:
+                state.stacks[state.selectedTab, default: []].append(id)
+
+            case .present:
+                guard let presentID = currentActivePresentedID() else { return }
+                state.presentedStacks[presentID, default: [presentID]].append(id)
+
+            case .specificPresent(let presentID):
+                state.presentedStacks[presentID, default: [presentID]].append(id)
+            }
         }
     }
 
     // MARK: - Pop
 
     @discardableResult
-    public func pop() -> RouteID? {
+    public func pop(scope: NavigationScope = .automatic) -> RouteID? {
 
-        state.stacks[state.selectedTab]?.popLast()
+        switch scope {
+
+        case .automatic:
+            if let presentID = currentActivePresentedID() {
+                return state.presentedStacks[presentID]?.popLast()
+            }
+            return state.stacks[state.selectedTab]?.popLast()
+
+        case .tab:
+            return state.stacks[state.selectedTab]?.popLast()
+
+        case .present:
+            guard let presentID = currentActivePresentedID() else { return nil }
+            return state.presentedStacks[presentID]?.popLast()
+
+        case .specificPresent(let presentID):
+            return state.presentedStacks[presentID]?.popLast()
+        }
     }
 
-    public func popToRoot() {
+    public func popToRoot(scope: NavigationScope = .automatic) {
 
-        state.stacks[state.selectedTab]?.removeAll()
+        switch scope {
+
+        case .automatic:
+            if let presentID = currentActivePresentedID() {
+                state.presentedStacks[presentID] = [presentID]
+            } else {
+                state.stacks[state.selectedTab]?.removeAll()
+            }
+
+        case .tab:
+            state.stacks[state.selectedTab]?.removeAll()
+
+        case .present:
+            guard let presentID = currentActivePresentedID() else { return }
+            state.presentedStacks[presentID] = [presentID]
+
+        case .specificPresent(let presentID):
+            state.presentedStacks[presentID] = [presentID]
+        }
     }
 
     // MARK: - Present
@@ -140,6 +214,7 @@ public final class FlowCoordinator: ObservableObject, Router {
 
             state.presentedStacks[id] = stack
             state.presentStyles[id] = style
+            state.presentationOrder.append(id)
 
             switch style {
 
@@ -160,6 +235,7 @@ public final class FlowCoordinator: ObservableObject, Router {
 
         state.presentedStacks[id] = nil
         state.presentStyles.removeValue(forKey: id)
+        state.presentationOrder.removeAll { $0 == id }
 
         if state.sheets[state.selectedTab] == id {
             state.sheets[state.selectedTab] = nil
@@ -206,9 +282,9 @@ public final class FlowCoordinator: ObservableObject, Router {
 
     // MARK: - DeepLink
 
-    public func navigate(to url: URL, style: NavigationStyle = .push) async {
+    public func navigate(to url: URL, style: NavigationStyle = .push, scope: NavigationScope = .automatic) async {
 
-        await navigate(to: url, style: style, parsers: [])
+        await navigate(to: url, style: style, parsers: [], scope: scope)
     }
 
     public func presentStyle(for id: RouteID) -> PresentStyle {

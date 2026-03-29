@@ -23,6 +23,8 @@ public struct TabNavigationState: Codable, Equatable {
 
     public var presentStyles: [RouteID: PresentStyle] = [:]
 
+    public var presentationOrder: [RouteID] = []
+
     public init(
         selectedTab: String,
         tabs: [TabDescriptor]
@@ -36,6 +38,7 @@ public struct TabNavigationState: Codable, Equatable {
         self.fullScreens = [:]
         self.presentedStacks = [:]
         self.presentStyles = [:]
+        self.presentationOrder = []
 
         for tab in tabs {
 
