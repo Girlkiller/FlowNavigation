@@ -16,7 +16,7 @@ import FlowNavigationTypes
 extension FlowCoordinator {
 
     /// 支持一个或多个 DeepLinkParser
-    public func navigate(to url: URL, style: NavigationStyle = .push, parsers: [DeepLinkParser] = [], scope: NavigationScope) async {
+    func navigate(to url: URL, style: NavigationStyle = .push, parsers: [DeepLinkParser] = [], scope: NavigationScope) async {
         var parsers = parsers
         let defaultParser = DeepLinkManager.shared.default
 
@@ -37,11 +37,10 @@ extension FlowCoordinator {
                 // 直接打开页面
                 switch style {
                 case .push:
-                    push(routeID, scope: scope)
+                    await execute(.push(routeID, scope))
                 case .present(let presentStyle):
-                    present(routeID, style: presentStyle)
+                    await execute(.present(routeID, presentStyle))
                 }
-                return
             }
         }
     }

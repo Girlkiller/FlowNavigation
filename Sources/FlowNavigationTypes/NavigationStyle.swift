@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum NavigationStyle {
+public enum NavigationStyle: Equatable {
     case push
     case present(PresentStyle)
 }

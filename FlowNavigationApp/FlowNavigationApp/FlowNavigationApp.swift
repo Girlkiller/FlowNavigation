@@ -85,7 +85,7 @@ struct FlowNavigationApp: App {
                 icon: .asset("icon_tab_add"),
                 style: .centerButton,
                 action: { [weak coordinator] in
-                    coordinator?.present(.createPost, style: .fullScreen(transparent: true))
+                    coordinator?.perform(.present(.createPost, .fullScreen(transparent: true)))
                 }
             ),
             TabDescriptor(

@@ -30,7 +30,13 @@ struct MyAppModule: @preconcurrency RouteModule {
                 NavBarItem(
                     view: AnyView(
                         Button {
-                            NavigationEnvironment.shared.dismiss(.createPost)
+                            NavigationEnvironment.shared.perform(
+                                .dismissAndPresent(
+                                    dismissID: .createPost,
+                                    presentID: .profile,
+                                    style: .fullScreen(transparent: false)
+                                )
+                            )
                         } label: {
                             Image(systemName: "xmark")
                                 .tint(.black)

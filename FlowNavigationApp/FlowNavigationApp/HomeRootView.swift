@@ -21,15 +21,15 @@ struct HomeRootView: View {
                 .font(.largeTitle)
 
             Button("Push Profile") {
-                coordinator.present(.profile, style: .sheet(allowsDismiss: false))
+                coordinator.perform(.present(.profile, .sheet(allowsDismiss: false)))
             }
 
             Button("Present Settings") {
-                coordinator.present(.settings)
+                coordinator.perform(.present(.settings))
             }
 
             Button("Push Test Detail") {
-                coordinator.push(.testDetail)
+                coordinator.navigate(to: .testDetail)
             }
 
             Divider()

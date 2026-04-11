@@ -20,6 +20,8 @@ public struct FlowNavigationContainer<Root: View>: View {
     var centerButtonStyle: ((AnyView) -> AnyView)?
 
     @State private var tabBarHidden: Bool = false
+    @State private var currentSheetID: RouteID?
+    @State private var currentFullScreenID: RouteID?
 
     public init(
         coordinator: FlowCoordinator,
@@ -115,13 +117,26 @@ public struct FlowNavigationContainer<Root: View>: View {
             }
             .tag(tab.id)
 
-            .sheet(item: sheetBinding(for: tab.id)) { sheetID in
+            .sheet(item: sheetBinding(for: tab.id), onDismiss: {
+                if let id = currentSheetID {
+                    coordinator.handleDismissCompletion(for: id)
+                    currentSheetID = nil
+                }
+            }) { sheetID in
                 let style = coordinator.presentStyle(for: sheetID)
                 modalNavigation(for: sheetID, showClose: !style.allowsDismiss, transparent: style.isTransparent)
                     .interactiveDismissDisabled(!style.allowsDismiss)
+                    .onAppear {
+                        currentSheetID = sheetID
+                    }
             }
 
-            .fullScreenCover(item: fullScreenBinding(for: tab.id)) { id in
+            .fullScreenCover(item: fullScreenBinding(for: tab.id), onDismiss: {
+                if let id = currentFullScreenID {
+                    coordinator.handleDismissCompletion(for: id)
+                    currentFullScreenID = nil
+                }
+            }) { id in
                 let style = coordinator.presentStyle(for: id)
                 ZStack {
                     if #available(iOS 16.4, *), style.isTransparent {
@@ -131,6 +146,9 @@ public struct FlowNavigationContainer<Root: View>: View {
                     } else {
                         modalNavigation(for: id, showClose: !style.allowsDismiss, transparent: style.isTransparent)
                     }
+                }
+                .onAppear {
+                    currentFullScreenID = id
                 }
             }
         }

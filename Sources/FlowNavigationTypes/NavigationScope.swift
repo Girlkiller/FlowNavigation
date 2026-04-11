@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum NavigationScope {
+public enum NavigationScope: Equatable {
 
     /// 默认：自动选择（present > tab）
     case automatic

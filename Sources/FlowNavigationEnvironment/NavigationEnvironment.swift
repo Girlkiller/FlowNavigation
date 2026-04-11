@@ -49,32 +49,36 @@ public final class NavigationEnvironment {
 }
 
 extension NavigationEnvironment: Router {
+    public func perform(_ action: FlowNavigationTypes.NavigationAction) {
+        router.perform(action)
+    }
+    
     public func selectTab(_ tab: String) {
         router.selectTab(tab)
     }
     
     public func push(_ id: FlowNavigationTypes.RouteID, scope: NavigationScope = .automatic) {
-        router.push(id, scope: scope)
+        router.perform(.push(id, scope))
     }
     
-    public func pop(scope: NavigationScope = .automatic) -> FlowNavigationTypes.RouteID? {
-        router.pop(scope: scope)
+    public func pop(scope: NavigationScope = .automatic) {
+        router.perform(.pop(scope))
     }
     
     public func popToRoot(scope: NavigationScope = .automatic) {
-        router.popToRoot(scope: scope)
+        router.perform(.popToRoot(scope))
     }
     
     public func dismiss(_ id: FlowNavigationTypes.RouteID) {
-        router.dismiss(id)
+        router.perform(.dismiss(id))
     }
     
     public func pushInPresent(_ presentID: FlowNavigationTypes.RouteID, route: FlowNavigationTypes.RouteID) {
-        router.pushInPresent(presentID, route: route)
+        router.perform(.push(route, .specificPresent(presentID)))
     }
     
-    public func popInPresent(_ presentID: FlowNavigationTypes.RouteID) -> FlowNavigationTypes.RouteID? {
-        router.popInPresent(presentID)
+    public func popInPresent(_ presentID: FlowNavigationTypes.RouteID) {
+        router.perform(.pop(.specificPresent(presentID)))
     }
     
     public func currentStack(for presentID: FlowNavigationTypes.RouteID) -> [FlowNavigationTypes.RouteID] {

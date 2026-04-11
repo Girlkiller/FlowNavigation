@@ -23,6 +23,11 @@ public final class FlowCoordinator: ObservableObject, Router {
 
     @Published public var state: TabNavigationState
 
+    private var queue: [NavigationAction] = []
+    private var isRunning: Bool = false
+
+    private var dismissCompletionActions: [RouteID: NavigationAction] = [:]
+
     // MARK: - Init
 
     public init(
@@ -34,6 +39,96 @@ public final class FlowCoordinator: ObservableObject, Router {
         self.state = initialState
         self.guards = guards
     }
+
+    public func perform(_ action: NavigationAction) {
+        queue.append(action)
+
+        if !isRunning {
+            Task { await run() }
+        }
+    }
+
+    private func run() async {
+
+        guard !isRunning else { return }
+        isRunning = true
+
+        while !queue.isEmpty {
+
+            let action = queue.removeFirst()
+            await execute(action)
+        }
+
+        isRunning = false
+    }
+
+    func execute(_ action: NavigationAction) async {
+
+        switch action {
+
+        case let .push(id, scope):
+            push(id, scope: scope)
+
+        case let .pop(scope):
+            _ = pop(scope: scope)
+
+        case let .popToRoot(scope):
+            popToRoot(scope: scope)
+
+        case let .present(id, style, stack):
+            await present(id, style: style, initialStack: stack)
+
+        case let .dismiss(id):
+            dismiss(id)
+
+        case let .sequence(actions):
+            for a in actions {
+                await execute(a)
+            }
+
+        case let .replaceAll(with, style):
+            await replaceAll(with: with, style: style)
+
+        case let .replaceTop(id, scope):
+            await replaceTop(id, scope: scope)
+
+        case let .dismissAndPush(dismissID, pushID, scope):
+            setDismissCompletion(
+                for: dismissID,
+                action: .push(pushID, scope)
+            )
+
+            dismiss(dismissID)
+
+        case let .dismissAndPresent(dismissID, presentID, style, stack):
+            setDismissCompletion(
+                for: dismissID,
+                action: .present(presentID, style, initialStack: stack)
+            )
+
+            dismiss(dismissID)
+
+        case let .navigate(url, style, scope):
+            await navigate(to: url, style: style, scope: scope)
+        }
+    }
+
+    public func setDismissCompletion(
+        for id: RouteID,
+        action: NavigationAction
+    ) {
+        dismissCompletionActions[id] = action
+    }
+
+    public func handleDismissCompletion(for id: RouteID) {
+
+        guard let action = dismissCompletionActions[id] else { return }
+
+        dismissCompletionActions.removeValue(forKey: id)
+
+        perform(action)
+    }
+
 
     // MARK: - Guard Check
 
@@ -120,7 +215,7 @@ public final class FlowCoordinator: ObservableObject, Router {
 
     // MARK: - Push
 
-    public func push(
+    private func push(
         _ id: RouteID,
         scope: NavigationScope = .automatic
     ) {
@@ -154,7 +249,7 @@ public final class FlowCoordinator: ObservableObject, Router {
     // MARK: - Pop
 
     @discardableResult
-    public func pop(scope: NavigationScope = .automatic) -> RouteID? {
+    private func pop(scope: NavigationScope = .automatic) -> RouteID? {
 
         switch scope {
 
@@ -176,7 +271,7 @@ public final class FlowCoordinator: ObservableObject, Router {
         }
     }
 
-    public func popToRoot(scope: NavigationScope = .automatic) {
+    private func popToRoot(scope: NavigationScope = .automatic) {
 
         switch scope {
 
@@ -200,7 +295,7 @@ public final class FlowCoordinator: ObservableObject, Router {
     }
 
     // MARK: - Present
-    public func present(
+    private func present(
         _ id: RouteID,
         style: PresentStyle = .sheet(allowsDismiss: true),
         initialStack: [RouteID]? = nil
@@ -231,7 +326,7 @@ public final class FlowCoordinator: ObservableObject, Router {
 
     // MARK: - Dismiss
 
-    public func dismiss(_ id: RouteID) {
+    private func dismiss(_ id: RouteID) {
 
         state.presentedStacks[id] = nil
         state.presentStyles.removeValue(forKey: id)
@@ -248,7 +343,7 @@ public final class FlowCoordinator: ObservableObject, Router {
 
     // MARK: - Push in Present
 
-    public func pushInPresent(
+    private func pushInPresent(
         _ presentID: RouteID,
         route: RouteID
     ) {
@@ -264,6 +359,66 @@ public final class FlowCoordinator: ObservableObject, Router {
         state.presentedStacks[presentID]?.popLast()
     }
 
+    private func replaceTop(
+        _ id: RouteID,
+        scope: NavigationScope
+    ) {
+        switch scope {
+
+        case .automatic:
+            if let presentID = currentActivePresentedID() {
+                var stack = state.presentedStacks[presentID] ?? [presentID]
+                _ = stack.popLast()
+                stack.append(id)
+                state.presentedStacks[presentID] = stack
+            } else {
+                var stack = state.stacks[state.selectedTab] ?? []
+                _ = stack.popLast()
+                stack.append(id)
+                state.stacks[state.selectedTab] = stack
+            }
+
+        case .tab:
+            var stack = state.stacks[state.selectedTab] ?? []
+            _ = stack.popLast()
+            stack.append(id)
+            state.stacks[state.selectedTab] = stack
+
+        case .present:
+            guard let presentID = currentActivePresentedID() else { return }
+            var stack = state.presentedStacks[presentID] ?? [presentID]
+            _ = stack.popLast()
+            stack.append(id)
+            state.presentedStacks[presentID] = stack
+
+        case .specificPresent(let presentID):
+            var stack = state.presentedStacks[presentID] ?? [presentID]
+            _ = stack.popLast()
+            stack.append(id)
+            state.presentedStacks[presentID] = stack
+        }
+    }
+
+    // MARK: - REPLACE ALL
+
+    private func replaceAll(
+        with id: RouteID,
+        style: PresentStyle
+    ) async {
+        let presented = state.presentationOrder
+
+        for pid in presented.reversed() {
+            dismiss(pid)
+        }
+
+        state.stacks[state.selectedTab]?.removeAll()
+
+        await present(id, style: style, initialStack: nil)
+    }
+}
+
+extension FlowCoordinator {
+
     // MARK: - Query Current Stack
 
     public func currentStack(for presentID: RouteID) -> [RouteID] {
@@ -278,13 +433,6 @@ public final class FlowCoordinator: ObservableObject, Router {
         if state.presentedStacks[id] == nil {
             state.presentedStacks[id] = [id]
         }
-    }
-
-    // MARK: - DeepLink
-
-    public func navigate(to url: URL, style: NavigationStyle = .push, scope: NavigationScope = .automatic) async {
-
-        await navigate(to: url, style: style, parsers: [], scope: scope)
     }
 
     public func presentStyle(for id: RouteID) -> PresentStyle {
