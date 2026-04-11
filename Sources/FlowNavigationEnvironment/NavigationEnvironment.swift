@@ -60,7 +60,11 @@ extension NavigationEnvironment: Router {
     public func push(_ id: FlowNavigationTypes.RouteID, scope: NavigationScope = .automatic) {
         router.perform(.push(id, scope))
     }
-    
+
+    public func present(_ id: FlowNavigationTypes.RouteID, style: PresentStyle = .fullScreen(transparent: false), initialStack: [RouteID]? = nil) {
+        router.perform(.present(id, style, initialStack: initialStack))
+    }
+
     public func pop(scope: NavigationScope = .automatic) {
         router.perform(.pop(scope))
     }
