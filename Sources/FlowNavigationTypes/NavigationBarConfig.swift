@@ -32,8 +32,9 @@ public struct NavigationBarConfig {
 
     // 完全自定义
     public var customBar: AnyView? = nil
+    public var customBarHeight: CGFloat = 88.0
 
-    public init(hidden: Bool = false, title: String? = nil, tintColor: Color = .black, hidesBackButton: Bool = false, leadingItems: [NavBarItem] = [], trailingItems: [NavBarItem] = [], customBar: AnyView? = nil) {
+    public init(hidden: Bool = false, title: String? = nil, tintColor: Color = .black, hidesBackButton: Bool = false, leadingItems: [NavBarItem] = [], trailingItems: [NavBarItem] = [], customBar: AnyView? = nil, customBarHeight: CGFloat = 88.0) {
         self.hidden = hidden
         self.title = title
         self.tintColor = tintColor
@@ -41,5 +42,6 @@ public struct NavigationBarConfig {
         self.leadingItems = leadingItems
         self.trailingItems = trailingItems
         self.customBar = customBar
+        self.customBarHeight = customBarHeight
     }
 }

@@ -221,11 +221,17 @@ public struct FlowNavigationContainer<Root: View>: View {
         }
 
         return AnyView(
-            ZStack(alignment: .top) {
-                view
+            VStack(spacing: 0) {
+
+                // ✅ 导航栏（占位！）
                 custom
+                    .frame(height: config.customBarHeight)
+
+                // ✅ 内容
+                view
             }
-                .ignoresSafeArea(edges: .top)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .ignoresSafeArea(edges: .top) // 允许导航栏延伸
         )
     }
 
