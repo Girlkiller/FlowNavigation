@@ -21,8 +21,7 @@ struct MyAppModule: @preconcurrency RouteModule {
         let customNavBar = NavigationBarConfig(
             customBar: AnyView(
                 DemoNavBarView()
-            ),
-            customBarHeight: 88
+            )
         )
         registry.register(
             RouteDescriptor(id: .home, navBar: customNavBar) { _ in
@@ -95,6 +94,7 @@ struct DemoNavBarView: View {
     ]
 
     @State private var currentId: String = "1"
+    @Environment(\.safeAreaInsets) var insets
 
     var body: some View {
 
@@ -102,7 +102,7 @@ struct DemoNavBarView: View {
 
             // ✅ 顶部安全区
             Spacer()
-                .frame(height: topInset)
+                .frame(height: insets.top)
 
             HStack(spacing: 8) {
 
@@ -188,12 +188,13 @@ private extension DemoNavBarView {
     }
 }
 
-private extension DemoNavBarView {
+private struct SafeAreaInsetsKey: EnvironmentKey {
+    static let defaultValue: EdgeInsets = EdgeInsets()
+}
 
-    var topInset: CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
-            .first?
-            .safeAreaInsets.top ?? 44
+extension EnvironmentValues {
+    var safeAreaInsets: EdgeInsets {
+        get { self[SafeAreaInsetsKey.self] }
+        set { self[SafeAreaInsetsKey.self] = newValue }
     }
 }

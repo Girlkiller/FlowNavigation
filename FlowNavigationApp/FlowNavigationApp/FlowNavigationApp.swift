@@ -107,25 +107,28 @@ struct FlowNavigationApp: App {
 
     var body: some Scene {
         WindowGroup {
-            FlowNavigationContainer(
-                coordinator: coordinator,
-                registry: registry
-            ) { tabID in
-                // 根据 tabID 返回不同根视图
-                switch tabID {
-                case "home":
-                    HomeRootView()
-                case "profile":
-                    ProfileView(userID: "123123")
-                case "remind":
-                    RemindView(id: "remind 123456")
-                case "me":
-                    MeView(userID: "abacsd")
-                default:
-                    Text("Unknown tab")
+            GeometryReader { geo in
+                FlowNavigationContainer(
+                    coordinator: coordinator,
+                    registry: registry
+                ) { tabID in
+                    // 根据 tabID 返回不同根视图
+                    switch tabID {
+                    case "home":
+                        HomeRootView()
+                    case "profile":
+                        ProfileView(userID: "123123")
+                    case "remind":
+                        RemindView(id: "remind 123456")
+                    case "me":
+                        MeView(userID: "abacsd")
+                    default:
+                        Text("Unknown tab")
+                    }
                 }
+                .environmentObject(coordinator)
+                .environment(\.safeAreaInsets, geo.safeAreaInsets)
             }
-            .environmentObject(coordinator)
         }
     }
 }

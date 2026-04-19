@@ -224,9 +224,12 @@ public struct FlowNavigationContainer<Root: View>: View {
             VStack(spacing: 0) {
 
                 // ✅ 导航栏（占位！）
-                custom
-                    .frame(height: config.customBarHeight)
-
+                if let customBarHeight = config.customBarHeight {
+                    custom
+                        .frame(height: customBarHeight())
+                } else {
+                    custom
+                }
                 // ✅ 内容
                 view
             }
